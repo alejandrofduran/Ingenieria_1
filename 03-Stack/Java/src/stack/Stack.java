@@ -10,55 +10,40 @@
  */
 package stack;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 public class Stack {
 
-    public static final String STACK_EMPTY_DESCRIPTION = "Stack is Empty";
-    //private final Deque<Object> stack;    
-    private final Deque<ObjectStack> stack;
-    
-    public Stack() {
-        //stack = new ArrayDeque<Object>();
-        stack = new ArrayDeque<ObjectStack>();
-        stack.push(new NullObject());
-    }
+  public static final String STACK_EMPTY_DESCRIPTION = "Stack is Empty";
+  private Nodo actual;
+  private int size = 0;
 
-    public void push(Object anObject) {
-        //stack.push(anObject);
-        stack.push(new ValueObjectStack(anObject));
-    }
+  public Stack() {
+    this.actual = new NodoVacio();
+  }
 
-    public Object pop() {
-        /*if (stack.isEmpty()) {
-            throw new RuntimeException(Stack.STACK_EMPTY_DESCRIPTION);
-        } else {
-            return stack.pop();
-        }*/
-        return stack.pop().valor();
-    }
+  public void push(Object anObject) {
+    Nodo nuevo = new NodoNoVacio(anObject,actual);
+    actual = nuevo;
+    size++;
+  }
 
-    public Object top() {
-        /*if (stack.isEmpty()) {
-            return throwExeptionIsEmpty();
-        } else {
-            return stack.getFirst();
-        }*/
-        return stack.getFirst().valor();
-    }
+  public Object pop() {
+    size--;
+    Object o = actual.objeto();
+    actual = actual.anterior();
+    return o;
+  }
 
-    public Boolean isEmpty() {
-        //return stack.isEmpty();
-        return stack.getFirst().isEmpty();
-    }
+  public Object top() {
+    return actual.objeto();
+  }
 
-    public Integer size() {
-        return stack.size()-1;
-    }
+  public Boolean isEmpty() {
+    return actual.esVacio();
+  }
 
-    /*private Object throwExeptionIsEmpty() {
-        throw new RuntimeException(ObjectStack.STACK_EMPTY_DESCRIPTION);
-    }*/
+  public Integer size() {
+    return size;
+  }
+
 
 }
