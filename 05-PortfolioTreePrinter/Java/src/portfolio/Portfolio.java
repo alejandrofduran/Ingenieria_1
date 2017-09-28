@@ -13,62 +13,84 @@ package portfolio;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Portfolio implements SummarizingAccount{
+public class Portfolio implements SummarizingAccount {
 
-	public static final String ACCOUNT_NOT_MANAGED = "No se maneja esta cuenta";
-	public static final String ACCOUNT_ALREADY_MANAGED = "La cuenta ya está manejada por otro portfolio";
-	private List<SummarizingAccount> summarizingAccounts; 
-	
-	public static Portfolio createWith(SummarizingAccount anAccount, SummarizingAccount anotherAccount) {
-		Portfolio portfolio = new Portfolio();
-		portfolio.addAccount(anAccount);
-		portfolio.addAccount(anotherAccount);
-		
-		return portfolio;
-	}
+    public static final String ACCOUNT_NOT_MANAGED = "No se maneja esta cuenta";
+    public static final String ACCOUNT_ALREADY_MANAGED = "La cuenta ya está manejada por otro portfolio";
+    private List<SummarizingAccount> summarizingAccounts;
 
-	public Portfolio(){
-		this.summarizingAccounts = new ArrayList<SummarizingAccount>();
-	}
-	
-	public double balance() {
-		double saldo = 0;
-		for (SummarizingAccount summarizingAccount : summarizingAccounts) {
-			saldo = saldo + summarizingAccount.balance();
-		}
+    public static Portfolio createWith(SummarizingAccount anAccount, SummarizingAccount anotherAccount) {
+        Portfolio portfolio = new Portfolio();
+        portfolio.addAccount(anAccount);
+        portfolio.addAccount(anotherAccount);
 
-		return saldo;
-	}
-	
-	public boolean registers(AccountTransaction transaction) {
-		for (SummarizingAccount summarizingAccount : summarizingAccounts) 
-			if(summarizingAccount.registers(transaction)) return true;
-		
-		return false;
-	}
-	
-	public boolean manages(SummarizingAccount account) {
-		if (this == account ) return true;
-		
-		for (SummarizingAccount summarizingAccount : summarizingAccounts) 
-			if(summarizingAccount.manages(account)) return true;
-		
-		return false;
-	}
-	public List<AccountTransaction> transactions() {
-		ArrayList<AccountTransaction> transactions = new ArrayList<AccountTransaction>();
-		for (SummarizingAccount summarizingAccount : summarizingAccounts)
-			transactions.addAll(summarizingAccount.transactions());
-		
-		return transactions;
-		
-	}
-	
-	public void addAccount(SummarizingAccount anAccount) {
-		if (manages(anAccount))
-			throw new RuntimeException(ACCOUNT_ALREADY_MANAGED);
+        return portfolio;
+    }
 
-		summarizingAccounts.add(anAccount);
-	}
+    public Portfolio() {
+        this.summarizingAccounts = new ArrayList<SummarizingAccount>();
+    }
 
+    public double balance() {
+        double saldo = 0;
+        for (SummarizingAccount summarizingAccount : summarizingAccounts) {
+            saldo = saldo + summarizingAccount.balance();
+        }
+
+        return saldo;
+    }
+
+    public boolean registers(AccountTransaction transaction) {
+        for (SummarizingAccount summarizingAccount : summarizingAccounts) {
+            if (summarizingAccount.registers(transaction)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean manages(SummarizingAccount account) {
+        if (this == account) {
+            return true;
+        }
+
+        for (SummarizingAccount summarizingAccount : summarizingAccounts) {
+            if (summarizingAccount.manages(account)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public List<AccountTransaction> transactions() {
+        ArrayList<AccountTransaction> transactions = new ArrayList<AccountTransaction>();
+        for (SummarizingAccount summarizingAccount : summarizingAccounts) {
+            transactions.addAll(summarizingAccount.transactions());
+        }
+
+        return transactions;
+
+    }
+
+    public void addAccount(SummarizingAccount anAccount) {
+        if (manages(anAccount)) {
+            throw new RuntimeException(ACCOUNT_ALREADY_MANAGED);
+        }
+
+        summarizingAccounts.add(anAccount);
+    }
+
+    @Override
+    public void metodoObjetoAccount(MetodoObjetoSummarizingAccount metodoObjetoSummarizingAccount) {
+        metodoObjetoSummarizingAccount.metodoObjetoPorfolio(this);
+    }
+
+    public List<SummarizingAccount> cuantasManejadas(){
+        return this.summarizingAccounts;
+    }
+    
+    
+    
 }

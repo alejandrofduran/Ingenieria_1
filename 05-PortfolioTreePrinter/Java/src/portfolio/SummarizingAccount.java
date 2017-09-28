@@ -18,5 +18,6 @@ public interface SummarizingAccount {
 	public boolean registers(AccountTransaction transaction);
 	public boolean manages(SummarizingAccount account);
 	public List<AccountTransaction> transactions();
+        public void metodoObjetoAccount(MetodoObjetoSummarizingAccount metodoObjetoSummarizingAccount); 
 	
 }

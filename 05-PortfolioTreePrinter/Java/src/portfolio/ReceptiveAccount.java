@@ -42,4 +42,8 @@ public class ReceptiveAccount implements SummarizingAccount {
         return new ArrayList<AccountTransaction>(transactions);
     }
 
+    @Override
+    public void metodoObjetoAccount(MetodoObjetoSummarizingAccount metodoObjetoSummarizingAccount) {
+        metodoObjetoSummarizingAccount.metodoObjetoReceptiveAccount(this);
+    }
 }
