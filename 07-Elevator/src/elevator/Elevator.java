@@ -18,22 +18,26 @@ public class Elevator {
     private Cabin cabin;
     private SortedSet<Integer> floorsToGo = new TreeSet<Integer>();
     private SortedSet<Integer> pisosDeSensor = new TreeSet<Integer>();
-    private boolean idle;
+    //private boolean idle;
+    private ElevatorState state;
 
     public Elevator() {
         cabin = new Cabin(this);
-        this.idle = true;
+        //this.idle = true;
+        this.state = new ElevatorStateIdle(this);
 
     }
 
     //Elevator state
     public boolean isIdle() {
-        return this.idle;
+        //return this.idle;
+        return this.state.estaIdle();
     }
 
     //Esta funcionado
     public boolean isWorking() {
-        return !this.idle;
+        //return !this.idle;
+        return this.state.estaTrabajando();
     }
 
     //Door state
@@ -81,69 +85,92 @@ public class Elevator {
     //Button Events
     //Subir empujada desde el suelo
     public void goUpPushedFromFloor(int aFloorNumber) {
-        this.idle = false;
         this.floorsToGo.add(aFloorNumber);
-        
         for (int i = cabin.currentFloorNumber(); i < aFloorNumber; i++) {
-           pisosDeSensor.add(i+1); 
+            pisosDeSensor.add(i + 1);
         }
-                
-        if (this.isCabinDoorOpened() || this.isCabinDoorOpening()) {
-            this.cabin.closeDoor();
-        }
+        this.state.subirEmpujadaDesdeElSuelo(aFloorNumber);
+    }
+
+    public void subirEmpujadaDesdeElSueloIdle(int aFloorNumber) {
+        this.state = new ElevatorStateTrabajando(this);
+        this.cabin.puertaCerrandoce();
+    }
+
+    public void subirEmpujadaDesdeElSueloTrabajando(int aFloorNumber) {
     }
 
     //Abrir puerta de la cabina                        
     public void openCabinDoor() {
-        if (this.isCabinStopped() && !this.isCabinDoorOpened()) {
-            cabin.openDoor();
-        }
+        //if (this.isCabinStopped() && !this.isCabinDoorOpened()) {
+        cabin.openDoor();
+        //}
     }
 
     //Cerrar puerta de la cabina
     public void closeCabinDoor() {
-        if (this.isCabinStopped() && !this.isCabinDoorClosed()
-                && this.isWorking() && !this.isCabinDoorOpening()) {
-            cabin.closeDoor();
-        }
+        this.state.cerrarPuertaDeCabina();
+    }
+
+    public void cerrrPuertaDeCabinaIdle() {
+    }
+
+    public void cerrrPuertaDeCabinaTrabajando() {
+        cabin.closeDoor();
     }
 
     //Sensor Events
     //Cabina en piso
     public void cabinOnFloor(int aFloorNumber) {
 
-        if (!pisosDeSensor.isEmpty() && pisosDeSensor.first().equals(aFloorNumber)) {
+        /*if (!pisosDeSensor.isEmpty() && pisosDeSensor.first().equals(aFloorNumber)) {
             pisosDeSensor.remove(aFloorNumber);
-        }else{
+        } else {
             throw new RuntimeException(Cabin.SENSOR_DESINCRONIZED);
-        }
-
-        if (this.floorsToGo.first().equals(aFloorNumber)) {
+        }*/
+        
+        //if (this.floorsToGo.first().equals(aFloorNumber)) {
             cabin.onFloor(aFloorNumber);
-            this.floorsToGo.remove(aFloorNumber);
-        }
+        //    this.floorsToGo.remove(aFloorNumber);
+        //}
+    }
+
+    public boolean estaEnPisosDeSensor(int pisoNumero) {
+        return !pisosDeSensor.isEmpty() && pisosDeSensor.first().equals(pisoNumero);
+    }
+
+    public void sacarDePisosDeSensor(int pisoNumero) {
+        pisosDeSensor.remove(pisoNumero);
+    }
+
+    //Esto lo tengo que hacer asi porque sino tengo que  el erroro de sincornizacion de cabina no lo puedo sacar del elevador
+    public boolean esElPisoEnElQueTengoQuePara(int pisoNumero) {
+        return this.floorsToGo.first().equals(pisoNumero);
+    }
+
+    public void sacarDePisosQueTengoQueIr(int pisoNumero) {
+        this.floorsToGo.remove(pisoNumero);
     }
 
     //Puerta de la cabina cerrada
     public void cabinDoorClosed() {
-        
-        if (!this.hasFloorsToGo() || this.isCabinDoorClosed()) {
-            throw new RuntimeException(CabinDoor.SENSOR_DESINCRONIZED);
-        }
-        
-        if (this.isCabinStopped()) {
-            this.idle = false;
-            cabin.doorClosed();
-        }
+
+        //if (!this.hasFloorsToGo() || this.isCabinDoorClosed()) {
+        //   throw new RuntimeException(CabinDoor.SENSOR_DESINCRONIZED);
+        //}
+        //if (this.isCabinStopped()) {
+        //this.idle = false;
+        cabin.doorClosed();
+        //}
     }
 
     //Puerta de la cabina abierta
     public void cabinDoorOpened() {
-        if (this.isCabinStopped()) {
-            if (!this.hasFloorsToGo()) {
-                this.idle = true;
-            }
-            cabin.doorOpened();
+        cabin.doorOpened();
+        if (!this.hasFloorsToGo()) {
+            //this.idle = true;
+            this.state = new ElevatorStateIdle(this);
+        } else {
             this.cabin.waitForPeople();
         }
     }
