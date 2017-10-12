@@ -10,22 +10,26 @@ public class Motor {
 		MOVING_COUNTER_CLOCKWISE //moviendoce en contra de las agujas del reloj
 	};
 	
+	private ExceptionHandler movingHandler;
+	
 	private MotorState state;
 	
 	public Motor() {
 		state = MotorState.STOPPED;
+		movingHandler = new NullException();
 	}
 	
         //Parar
 	public void stop() {
 		state = MotorState.STOPPED;
+		movingHandler = new NullException();
 	}
 
         //Moverce en sentido de las agujas del reloj
 	public void moveClockwise() {
 		assertIsNotMoving();
-		
 		state = MotorState.MOVING_CLOCKWISE;
+		movingHandler = new MovingExceptionHandler();
 	}
 
         //Mocerse en contra de las ajuigas del reloj
@@ -33,6 +37,7 @@ public class Motor {
 		assertIsNotMoving();
 		
 		state = MotorState.MOVING_COUNTER_CLOCKWISE;
+		movingHandler = new MovingExceptionHandler();
 	}
 
         //se esta moviendo en contra de las agujas del reloj
@@ -57,6 +62,6 @@ public class Motor {
 
         //assert no se esta moviendo
 	void assertIsNotMoving() {
-		if(isMoving()) throw new RuntimeException(Motor.MOTOR_IS_MOVING);
+		movingHandler.throwEx();
 	}
 }
