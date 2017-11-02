@@ -1,6 +1,6 @@
 package model;
 
-public class Tarjeta {
+public class CreditCard {
 
   private Integer numero;
 

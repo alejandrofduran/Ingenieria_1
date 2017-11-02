@@ -1,11 +1,11 @@
-import model.Tarjeta;
+import model.CreditCard;
 import org.junit.Test;
 
 public class TarjetaTest {
 
   @Test
   public void testCrearTarjeta() {
-    Tarjeta tarjeta = new Tarjeta();
+    CreditCard tarjeta = new CreditCard();
   }
 
 }

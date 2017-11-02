@@ -1,4 +1,4 @@
-import model.Tarjeta;
+import model.CreditCard;
 import org.junit.Before;
 import org.junit.Test;
 import processor.MerchantProcessor;
@@ -14,7 +14,7 @@ public class MerchantProcessorTest {
 
   @Test
   public void testA() {
-    merchantProcessor.validarTarjeta(new Tarjeta());
+    merchantProcessor.validarTarjeta(new CreditCard());
   }
 
 }

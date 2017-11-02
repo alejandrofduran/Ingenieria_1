@@ -1,10 +1,10 @@
 package processor;
 
-import model.Tarjeta;
+import model.CreditCard;
 
 public class MerchantProcessor {
 
-  public void validarTarjeta(Tarjeta tarjeta) {
+  public void validarTarjeta(CreditCard tarjeta) {
 
   }
 }
