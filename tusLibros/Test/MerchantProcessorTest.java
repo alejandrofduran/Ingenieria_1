@@ -1,6 +1,4 @@
-import model.CreditCard;
 import org.junit.Before;
-import org.junit.Test;
 import processor.MerchantProcessor;
 
 public class MerchantProcessorTest {
@@ -12,9 +10,5 @@ public class MerchantProcessorTest {
     merchantProcessor = new MerchantProcessor();
   }
 
-  @Test
-  public void testA() {
-    merchantProcessor.validarTarjeta(new CreditCard());
-  }
 
 }

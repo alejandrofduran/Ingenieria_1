@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import exceptions.InvalidArgumentException;
 import java.util.HashSet;
 import java.util.Set;
+import mock.MockFactory;
 import model.Cart;
 import model.Cashier;
 import model.Clock.CreditCard;
@@ -14,55 +15,13 @@ import org.junit.Test;
 
 public class CashierTest {
 
-  CreditCard validCreditCard = new CreditCard() {
-    @Override
-    public boolean isValid() {
-      return true;
-    }
-
-    @Override
-    public String owner() {
-      return null;
-    }
-
-    @Override
-    public Integer creditCardExpiration() {
-      return null;
-    }
-
-    @Override
-    public Integer number() {
-      return null;
-    }
-  };
-
-  CreditCard invalidCreditCard = new CreditCard() {
-    @Override
-    public boolean isValid() {
-      return false;
-    }
-
-    @Override
-    public String owner() {
-      return null;
-    }
-
-    @Override
-    public Integer creditCardExpiration() {
-      return null;
-    }
-
-    @Override
-    public Integer number() {
-      return null;
-    }
-  };
   private Cashier cashier;
   private Cart cart;
   private Set<String> catalog;
   private String laBiblia = "La biblia";
   private String elAnticristo = "El anticristo";
   private CreditCard creditCard;
+  private MockFactory mockFactory = new MockFactory();
 
   @Before
   public void setUp() {
@@ -101,7 +60,7 @@ public class CashierTest {
   public void testCheckOutWithInvalidCreditCard() {
     cart.add(laBiblia, 666);
     try {
-      cashier.checkOut(cart, invalidCreditCard);
+      cashier.checkOut(cart, mockFactory.newInvalidCreditCard());
       fail();
     } catch (InvalidArgumentException ex) {
       assertThat(ex.getMessage(), is(Cashier.TARJETA_INVALIDA));
@@ -111,6 +70,6 @@ public class CashierTest {
   @Test
   public void testCheckOutWithValidCreditCard() {
     cart.add(laBiblia, 666);
-    cashier.checkOut(cart, validCreditCard);
+    cashier.checkOut(cart, mockFactory.newValidCreditCard());
   }
 }

@@ -3,9 +3,13 @@ Asegurar que no se puede hacer checkout de un carrito vacio.
 Modelar Cajero. (cajero de una venta, cajero de una persona)
 Modelar venta.
 
-Cart,Cashier,CreditCard,Sale,catalogo, lista de precios.
+Cart,Cashier,model.Clock.CreditCard,Sale,catalogo, lista de precios.
 
 Interactuar carrito vs cashier (sale), carrito vs libro.
 Obtener total, debitar de la tarjeta de credito total de compra -> MerchantProcessor
 
 Usar un mock para MerchantProcessor -> mock (simulador)
+
+Despues de 30 minutos, el carrito deberia "expirar".
+
+Los test de esto no deberia modificar la hora del sistema (mock para tiempo).
