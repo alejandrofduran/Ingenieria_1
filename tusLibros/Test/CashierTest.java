@@ -7,15 +7,15 @@ import java.util.HashSet;
 import java.util.Set;
 import mock.MockFactory;
 import model.Cart;
-import model.Cashier;
+import ModelImpl.CashierImpl;
 import model.Clock.CreditCard;
-import model.CreditCardImpl;
+import ModelImpl.CreditCardImpl;
 import org.junit.Before;
 import org.junit.Test;
 
 public class CashierTest {
 
-  private Cashier cashier;
+  private CashierImpl cashier;
   private Cart cart;
   private Set<String> catalog;
   private String laBiblia = "La biblia";
@@ -25,7 +25,7 @@ public class CashierTest {
 
   @Before
   public void setUp() {
-    cashier = new Cashier();
+    cashier = new CashierImpl();
     catalog = new HashSet<String>();
     catalog.add(laBiblia);
     catalog.add(elAnticristo);
@@ -35,18 +35,18 @@ public class CashierTest {
 
   @Test
   public void testCreateCashier() {
-    Cashier cashier = new Cashier();
+    CashierImpl cashier = new CashierImpl();
   }
 
   @Test
   public void testCheckOutWithEmptyCart() {
     Cart emtpycart = new Cart(1L, new HashSet<>());
-    Cashier cashier = new Cashier();
+    CashierImpl cashier = new CashierImpl();
     try {
       cashier.checkOut(emtpycart, creditCard);
       fail();
     } catch (InvalidArgumentException ex) {
-      assertThat(ex.getMessage(), is(Cashier.CARRITO_VACIO_ERR));
+      assertThat(ex.getMessage(), is(CashierImpl.CARRITO_VACIO_ERR));
     }
   }
 
@@ -63,7 +63,7 @@ public class CashierTest {
       cashier.checkOut(cart, mockFactory.newInvalidCreditCard());
       fail();
     } catch (InvalidArgumentException ex) {
-      assertThat(ex.getMessage(), is(Cashier.TARJETA_INVALIDA));
+      assertThat(ex.getMessage(), is(CashierImpl.TARJETA_INVALIDA));
     }
   }
 
