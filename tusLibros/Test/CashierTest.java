@@ -2,14 +2,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+import ModelImpl.CashierImpl;
+import ModelImpl.CreditCardImpl;
 import exceptions.InvalidArgumentException;
 import java.util.HashSet;
 import java.util.Set;
 import mock.MockFactory;
 import model.Cart;
-import ModelImpl.CashierImpl;
-import model.Clock.CreditCard;
-import ModelImpl.CreditCardImpl;
+import model.CreditCard;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ public class CashierTest {
     catalog = new HashSet<String>();
     catalog.add(laBiblia);
     catalog.add(elAnticristo);
-    creditCard = new CreditCardImpl(123, 123, "John Doe");
+    creditCard = new CreditCardImpl(123, "012019", "John Doe");
     cart = new Cart(1l, catalog);
   }
 
