@@ -2,7 +2,9 @@ package serviceImpl;
 
 import java.util.Map;
 import java.util.Set;
+import model.Cart;
 import model.Cashier;
+import model.Client;
 import model.Sale;
 import modelImpl.CashierImpl;
 import service.CartService;
@@ -19,7 +21,9 @@ public class TusLibrosServiceImpl implements TusLibrosService {
 
   @Override
   public Long createCart(Long clientId, String password) {
-    return null;
+    Client client = clientService.findClient(clientId, password);
+    Cart cart = cartService.createCart(client);
+    return cart.id();
   }
 
   @Override
