@@ -2,11 +2,13 @@ package mock;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import model.Cart;
 import model.Client;
 import model.CreditCard;
+import modelImpl.ClientImpl;
 import processor.MerchantProcessor;
 
 public class MockFactory {
@@ -139,4 +141,18 @@ public class MockFactory {
       }
     };
   }
+
+  public static Set<String> books() {
+    Set<String> books = new HashSet<>();
+    books.add("Libro 1");
+    books.add("Libro 2");
+    return books;
+  }
+
+  public static Set<Client> clients() {
+    Set<Client> clients = new HashSet<>();
+    clients.add(new ClientImpl("John doe", "123456", 1l));
+    return clients;
+  }
+
 }
