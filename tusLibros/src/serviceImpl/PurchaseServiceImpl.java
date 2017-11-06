@@ -9,17 +9,21 @@ import java.util.Set;
 import model.Cart;
 import model.Client;
 import model.Sale;
+import modelImpl.SaleImpl;
 import service.PurchaseService;
 
 public class PurchaseServiceImpl implements PurchaseService {
 
   private Map<Client, Set<Sale>> clientsSales;
 
-  public PurchaseServiceImpl(Set<Client> clients) {
+  private Long nextId;
+
+  public PurchaseServiceImpl(Set<Client> clients, Long nextId) {
     clientsSales = new HashMap<>();
     for (Client client : clients) {
       clientsSales.put(client, new HashSet<>());
     }
+    this.nextId = nextId;
   }
 
   @Override
@@ -30,7 +34,13 @@ public class PurchaseServiceImpl implements PurchaseService {
   }
 
   @Override
-  public Long addSale(Cart cart) {
-    return null;
+  public Long addSale(Cart cart, double amount) {
+    Client client = cart.client();
+    Set<Sale> sales = clientsSales.get(client);
+    checkArgument(sales != null, "Carrito invalido");
+    Sale sale = new SaleImpl(cart, amount, nextId);
+    nextId++;
+    sales.add(sale);
+    return sale.id();
   }
 }

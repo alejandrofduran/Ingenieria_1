@@ -57,7 +57,7 @@ public class TusLibrosServiceImpl implements TusLibrosService {
     Cart cart = cartService.findCart(cartId);
     CreditCard creditCard = creditCardService
         .verifyCrediteCard(ccn, cced, cco, timeService.getCurrent());
-    cashier.checkOut(cart, creditCard);
-    return purchaseService.addSale(cart);
+    double amount = cashier.checkOut(cart, creditCard);
+    return purchaseService.addSale(cart, amount);
   }
 }

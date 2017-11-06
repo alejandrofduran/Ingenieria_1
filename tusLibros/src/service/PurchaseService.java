@@ -9,5 +9,5 @@ public interface PurchaseService {
 
   Set<Sale> findSales(Client client);
 
-  Long addSale(Cart cart);
+  Long addSale(Cart cart, double amount);
 }
