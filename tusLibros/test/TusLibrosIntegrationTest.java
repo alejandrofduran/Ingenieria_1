@@ -2,6 +2,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import exceptions.InvalidArgumentException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,10 +13,13 @@ import mock.MockFactory;
 import model.Cashier;
 import model.Client;
 import model.Sale;
+import modelImpl.CartImpl;
 import modelImpl.CashierImpl;
 import modelImpl.ClientImpl;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import service.CartService;
 import service.ClientService;
 import service.CreditCardService;
@@ -30,6 +35,8 @@ import serviceImpl.TusLibrosServiceImpl;
 
 public class TusLibrosIntegrationTest {
 
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
   private TusLibrosService tusLibrosService;
   private Set<String> bookCatalogue;
   private Set<Client> clients;
@@ -38,6 +45,7 @@ public class TusLibrosIntegrationTest {
   private Client client2;
   private String book1 = "Book 1";
   private String book2 = "Book 2";
+  private TimeService timeService;
 
   @Before
   public void setup() {
@@ -57,7 +65,7 @@ public class TusLibrosIntegrationTest {
     prices.put(book2, 20);
     Cashier cashier = new CashierImpl(prices, MockFactory.validMerchatProcessor());
     PurchaseService purchaseService = new PurchaseServiceImpl(clients, 1L);
-    TimeService timeService = new TimeServiceImpl(new Date());
+    timeService = new TimeServiceImpl(new Date());
     tusLibrosService = new TusLibrosServiceImpl(cashier, clientService,
         cartService, timeService, purchaseService, creditCardService);
   }
@@ -76,6 +84,18 @@ public class TusLibrosIntegrationTest {
     assertThat(sale.client(), is(client1));
     assertTrue(sale.amount() == 10 * prices.get(book1));
     assertThat(sale.id(), is(saleId));
+  }
+
+  @Test
+  public void testIntegrationWithTime() {
+    Long cartid = tusLibrosService.createCart(client1.id(), client1.password());
+    tusLibrosService.addToCart(cartid, book1, 10);
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.MINUTE, 40);
+    timeService.setTime(calendar.getTime());
+    expectedException.expect(InvalidArgumentException.class);
+    expectedException.expectMessage(CartImpl.MSG_ERROR_CARRITO_EXPIRADO);
+    tusLibrosService.addToCart(cartid, book1, 10);
   }
 
 }

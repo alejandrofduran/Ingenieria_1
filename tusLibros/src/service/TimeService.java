@@ -6,4 +6,5 @@ public interface TimeService {
 
   public Date getCurrent();
 
+  public void setTime(Date date);
 }

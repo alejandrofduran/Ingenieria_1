@@ -205,6 +205,11 @@ public class MockFactory {
       public Date getCurrent() {
         return null;
       }
+
+      @Override
+      public void setTime(Date date) {
+
+      }
     };
   }
 

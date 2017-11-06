@@ -17,4 +17,9 @@ public class TimeServiceImpl implements TimeService {
   public Date getCurrent() {
     return calendar.getTime();
   }
+
+  @Override
+  public void setTime(Date date) {
+    this.calendar.setTime(date);
+  }
 }
