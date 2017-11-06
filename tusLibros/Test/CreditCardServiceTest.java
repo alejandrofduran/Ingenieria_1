@@ -15,9 +15,14 @@ public class CreditCardServiceTest {
 
   @Test
   public void testCreditCardValidation() {
+    creditCardService.verifyCrediteCard("1234123412341234", "122017", "John Doe", new Date());
+  }
+
+  @Test
+  public void testCreditCardValidationWithInvalidFormat() {
     expectedException.expect(InvalidArgumentException.class);
     expectedException.expectMessage(CreditCardServiceImpl.FORMATO_DE_FECHA_INVALIDO);
-    creditCardService.verifyCrediteCard("1234123412341234", "152017", "John Doe", new Date());
+    creditCardService.verifyCrediteCard("1234123412341234", "92017", "John Doe", new Date());
   }
 
 }

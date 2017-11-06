@@ -34,7 +34,7 @@ public class CashierTest {
     catalog = new HashSet<String>();
     catalog.add(laBiblia);
     catalog.add(elAnticristo);
-    creditCard = new CreditCardImpl(123, "012019", "John Doe");
+    creditCard = new CreditCardImpl(123L, "012019", "John Doe");
     client = new ClientImpl("John Doe", "pass", 1l);
     cart = new CartImpl(1l, catalog, new Date(), client);
   }

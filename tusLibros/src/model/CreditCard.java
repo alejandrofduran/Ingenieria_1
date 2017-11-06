@@ -6,7 +6,6 @@ public interface CreditCard {
 
   String creditCardExpiration();
 
-  Integer number();
-
+  Long number();
 
 }

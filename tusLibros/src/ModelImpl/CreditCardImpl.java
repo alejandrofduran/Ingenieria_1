@@ -5,13 +5,13 @@ import model.CreditCard;
 
 public class CreditCardImpl implements CreditCard {
 
-  private Integer number;
+  private Long number;
 
   private String expirationDate;
 
   private String owner;
 
-  public CreditCardImpl(Integer number, String expirationDate, String owner) {
+  public CreditCardImpl(Long number, String expirationDate, String owner) {
     this.number = number;
     this.expirationDate = expirationDate;
     this.owner = owner;
@@ -32,7 +32,7 @@ public class CreditCardImpl implements CreditCard {
   }
 
   @Override
-  public Integer number() {
+  public Long number() {
     return number;
   }
 }
