@@ -2,13 +2,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+import ModelImpl.CartImpl;
 import ModelImpl.CashierImpl;
 import ModelImpl.CreditCardImpl;
 import exceptions.InvalidArgumentException;
 import java.util.HashSet;
 import java.util.Set;
 import mock.MockFactory;
-import model.Cart;
 import model.CreditCard;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import org.junit.Test;
 public class CashierTest {
 
   private CashierImpl cashier;
-  private Cart cart;
+  private CartImpl cart;
   private Set<String> catalog;
   private String laBiblia = "La biblia";
   private String elAnticristo = "El anticristo";
@@ -30,7 +30,7 @@ public class CashierTest {
     catalog.add(laBiblia);
     catalog.add(elAnticristo);
     creditCard = new CreditCardImpl(123, "012019", "John Doe");
-    cart = new Cart(1l, catalog);
+    cart = new CartImpl(1l, catalog);
   }
 
   @Test
@@ -40,7 +40,7 @@ public class CashierTest {
 
   @Test
   public void testCheckOutWithEmptyCart() {
-    Cart emtpycart = new Cart(1L, new HashSet<>());
+    CartImpl emtpycart = new CartImpl(1L, new HashSet<>());
     CashierImpl cashier = new CashierImpl();
     try {
       cashier.checkOut(emtpycart, creditCard);

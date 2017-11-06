@@ -8,10 +8,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
+import ModelImpl.CartImpl;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import model.Cart;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,11 +35,11 @@ public class CartTest {
   }
 
   /**
-   * Test of createCart method, of class Cart.
+   * Test of createCart method, of class CartImpl.
    */
   @Test
   public void testWhenTheCartHasIdAndIsEmpty() {
-    Cart carrito = new Cart(CLIENT_ID_UNO, catalogueIsbn);
+    CartImpl carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
     Map<String, Integer> libbros = carrito.itemsList();
     assertNotEquals(null, carrito.id());
     assertEquals(0, libbros.size());
@@ -47,7 +47,7 @@ public class CartTest {
 
   @Test
   public void testAddCatalogBooks() {
-    Cart carrito = new Cart(CLIENT_ID_UNO, catalogueIsbn);
+    CartImpl carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
     carrito.add(ISBN_EN_CATALGO_UNO, 3);
     carrito.add(ISBN_EN_CATALGO_UNO, 5);
     carrito.add(ISBN_EN_CATALGO_DOS, 3);
@@ -60,29 +60,29 @@ public class CartTest {
 
   @Test
   public void testAddNotCatalogBook() {
-    Cart carrito = new Cart(CLIENT_ID_UNO, catalogueIsbn);
+    CartImpl carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
     try {
       carrito.add(ISBN_QUE_NO_ESTA_EN_CATALGO, 3);
       fail();
     } catch (RuntimeException invalidBook) {
-      assertEquals(Cart.MSG_ERROR_LIBRO_INVALIDO, invalidBook.getMessage());
+      assertEquals(CartImpl.MSG_ERROR_LIBRO_INVALIDO, invalidBook.getMessage());
     }
   }
 
   @Test
   public void testAddInvalidQuantityForBook() {
-    Cart carrito = new Cart(CLIENT_ID_UNO, catalogueIsbn);
+    CartImpl carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
     try {
       carrito.add(ISBN_EN_CATALGO_UNO, 0);
       fail();
     } catch (RuntimeException invalidQuantity) {
-      assertEquals(Cart.MSG_ERROR_CANTIDAD, invalidQuantity.getMessage());
+      assertEquals(CartImpl.MSG_ERROR_CANTIDAD, invalidQuantity.getMessage());
     }
   }
 
   @Test
   public void testWhenAddingAnInvalidBookDoNotLoseTheRestOfTheBooksInTheCart() {
-    Cart carrito = new Cart(CLIENT_ID_UNO, catalogueIsbn);
+    CartImpl carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
     try {
       carrito.add(ISBN_EN_CATALGO_UNO, 3);
       carrito.add(ISBN_EN_CATALGO_UNO, 5);
@@ -94,13 +94,13 @@ public class CartTest {
       assertEquals(2, libbros.size());
       assertEquals(8, libbros.get(ISBN_EN_CATALGO_UNO).longValue());
       assertEquals(3, libbros.get(ISBN_EN_CATALGO_DOS).longValue());
-      assertEquals(Cart.MSG_ERROR_LIBRO_INVALIDO, invalidBook.getMessage());
+      assertEquals(CartImpl.MSG_ERROR_LIBRO_INVALIDO, invalidBook.getMessage());
     }
   }
 
   @Test
   public void testWhenAddingAnInvalidQuantityForBookDoNotLoseTheRestOfTheBooksInTheCart() {
-    Cart carrito = new Cart(CLIENT_ID_UNO, catalogueIsbn);
+    CartImpl carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
     try {
       carrito.add(ISBN_EN_CATALGO_UNO, 3);
       carrito.add(ISBN_EN_CATALGO_UNO, 5);
@@ -112,14 +112,14 @@ public class CartTest {
       assertEquals(2, libbros.size());
       assertEquals(8, libbros.get(ISBN_EN_CATALGO_UNO).intValue());
       assertEquals(3, libbros.get(ISBN_EN_CATALGO_DOS).intValue());
-      assertEquals(Cart.MSG_ERROR_CANTIDAD, invalidQuantity.getMessage());
+      assertEquals(CartImpl.MSG_ERROR_CANTIDAD, invalidQuantity.getMessage());
     }
 
   }
 
   @Test
   public void testRemoveFromCart() {
-    Cart cart = new Cart(CLIENT_ID_UNO,catalogueIsbn);
+    CartImpl cart = new CartImpl(CLIENT_ID_UNO,catalogueIsbn);
   }
 
 }

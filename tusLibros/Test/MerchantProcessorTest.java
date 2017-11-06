@@ -5,10 +5,4 @@ public class MerchantProcessorTest {
 
   private MerchantProcessor merchantProcessor;
 
-  @Before
-  public void construct() {
-    merchantProcessor = new MerchantProcessor();
-  }
-
-
 }
