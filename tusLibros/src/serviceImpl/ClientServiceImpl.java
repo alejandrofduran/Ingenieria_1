@@ -15,6 +15,7 @@ public class ClientServiceImpl implements ClientService {
   public ClientServiceImpl(Set<Client> clients) {
     clientsMap = new HashMap<>();
     for (Client client : clients) {
+      checkArgument(client.id() != null, "Id de cliente invalido");
       clientsMap.put(client.id(), client);
     }
   }
