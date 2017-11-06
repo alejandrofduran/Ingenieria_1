@@ -22,6 +22,10 @@ public class CartImpl implements Cart {
   public static final String MSG_ERROR_LIBRO_INVALIDO = "El libro indicado no es válido.";
   public static final String MSG_ERROR_CANTIDAD = "La cantidad debe de ser mayor o igual a 1.";
   public static final String MSG_ERROR_CARRITO_EXPIRADO = "Carrito expirado";
+  public static final String ID_INVALIDO = "Id invalido";
+  public static final String CATALOGO_VACIO = "Catalogo vacio";
+  public static final String CATALOGO_INVALIDO = "Catalogo invalido";
+  public static final String FECHA_ACTUAL_INVALIDA = "Fecha actual invalida";
   private static int halfAndHourMillis = 30 * 60 * 1000;
   Set<String> catalogueIsbn;
   private Long cartId = null;
@@ -30,6 +34,10 @@ public class CartImpl implements Cart {
   private Client client;
 
   public CartImpl(Long cartId, Set<String> catalogueIsbn, Date current, Client client) {
+    checkArgument(cartId != null, ID_INVALIDO);
+    checkArgument(catalogueIsbn != null, CATALOGO_INVALIDO);
+    checkArgument(!catalogueIsbn.isEmpty(), CATALOGO_VACIO);
+    checkArgument(current != null, FECHA_ACTUAL_INVALIDA);
     this.cartId = cartId;
     this.catalogueIsbn = catalogueIsbn;
     this.listBookIsbn = new HashMap<String, Integer>();

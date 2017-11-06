@@ -12,10 +12,16 @@ public class CashierImpl implements Cashier {
 
   public static final String CARRITO_VACIO_ERR = "Carrito vacio, no se puede hacer checkout";
   public static final String TARJETA_INVALIDA = "Tarjeta invalida";
+  public static final String LA_LISTA_DE_PRECIOS_ESTA_VACIA = "La lista de precios esta vacia";
+  public static final String PRECIO_MAYOR_A_0 = "El precio debe ser > 0";
   private Map<String, Integer> prices;
   private MerchantProcessor merchantProcessor;
 
-  public CashierImpl(Map<String, Integer> prices) {
+  public CashierImpl(Map<String, Integer> prices, MerchantProcessor merchantProcessor) {
+    checkArgument(!prices.isEmpty(), LA_LISTA_DE_PRECIOS_ESTA_VACIA);
+    for (String book : prices.keySet()) {
+      checkArgument(prices.get(book) > 0, PRECIO_MAYOR_A_0);
+    }
     this.prices = prices;
   }
 
