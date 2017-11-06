@@ -1,4 +1,4 @@
-package ModelImpl;
+package modelImpl;
 
 
 import model.CreditCard;

@@ -1,4 +1,4 @@
-import ModelImpl.CreditCardImpl;
+import modelImpl.CreditCardImpl;
 import model.CreditCard;
 import org.junit.Test;
 

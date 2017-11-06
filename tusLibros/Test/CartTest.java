@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
-import ModelImpl.CartImpl;
+import modelImpl.CartImpl;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;

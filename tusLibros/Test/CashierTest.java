@@ -2,9 +2,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import ModelImpl.CartImpl;
-import ModelImpl.CashierImpl;
-import ModelImpl.CreditCardImpl;
+import modelImpl.CartImpl;
+import modelImpl.CashierImpl;
+import modelImpl.CreditCardImpl;
 import exceptions.InvalidArgumentException;
 import java.util.HashSet;
 import java.util.Set;
