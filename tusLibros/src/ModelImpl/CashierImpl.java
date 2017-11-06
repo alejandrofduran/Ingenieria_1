@@ -2,10 +2,14 @@ package ModelImpl;
 
 import static utils.Utils.checkArgument;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import model.Cart;
 import model.Cashier;
+import model.Client;
 import model.CreditCard;
+import model.Sale;
 import processor.MerchantProcessor;
 
 public class CashierImpl implements Cashier {
@@ -14,6 +18,7 @@ public class CashierImpl implements Cashier {
   public static final String TARJETA_INVALIDA = "Tarjeta invalida";
   private Map<String, Integer> prices;
   private MerchantProcessor merchantProcessor;
+  private Map<Client, Set<Sale>> salesPerClient = new HashMap<>();
 
 
   public void checkOut(Cart cart, CreditCard creditCard) {
@@ -26,6 +31,7 @@ public class CashierImpl implements Cashier {
     }
     merchantProcessor
         .debit(price, creditCard.number(), creditCard.creditCardExpiration(), creditCard.owner());
+
   }
 
 }
