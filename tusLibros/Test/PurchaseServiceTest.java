@@ -95,7 +95,6 @@ public class PurchaseServiceTest {
     }
   }
 
-
   @Test
   public void testFindSale() {
     Set<Sale> sales = purchaseService.findSales(client);
