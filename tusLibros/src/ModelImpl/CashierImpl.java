@@ -21,7 +21,6 @@ public class CashierImpl implements Cashier {
 
   public double checkOut(Cart cart, CreditCard creditCard) {
     checkArgument(!cart.itemsList().isEmpty(), CARRITO_VACIO_ERR);
-    checkArgument(creditCard.isValid(), TARJETA_INVALIDA);
     double amount = 0;
     for (String book : cart.itemsList().keySet()) {
       checkArgument(prices.get(book) != null, "Libro fuera del catalogo de precios");
