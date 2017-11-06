@@ -1,6 +1,7 @@
 package mock;
 
 import model.Client;
+import processor.MerchantProcessor;
 
 public class MockFactory {
 
@@ -20,6 +21,15 @@ public class MockFactory {
       @Override
       public Long id() {
         return null;
+      }
+    };
+  }
+
+  public static MerchantProcessor validMerchatProcessor() {
+    return new MerchantProcessor() {
+      @Override
+      public void debit(double price, Long number, String expirationDate, String owner) {
+
       }
     };
   }
