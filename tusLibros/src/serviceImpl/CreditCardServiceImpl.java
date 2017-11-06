@@ -3,28 +3,34 @@ package serviceImpl;
 import static utils.Utils.checkArgument;
 
 import exceptions.InvalidArgumentException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import model.CreditCard;
+import modelImpl.CreditCardImpl;
 import service.CreditCardService;
 
 public class CreditCardServiceImpl implements CreditCardService {
 
   public static final String FORMATO_DE_FECHA_INVALIDO = "Formato de fecha invalido";
 
+  private static String number_regex = "\\d+";
+
   @Override
   public CreditCard verifyCrediteCard(String ccn, String cced, String cco, Date current) {
     checkArgument(cced.length() == 6, FORMATO_DE_FECHA_INVALIDO);
     checkArgument(cco.length() <= 30, "Formato de owner invalido");
-    String monthString = cced.substring(0, 2);
-    String yearString = cced.substring(2, 6);
-    int month = 0, year = 0;
+    checkArgument(cco.length() == 16, FORMATO_DE_FECHA_INVALIDO);
+    checkArgument(cco.matches(number_regex), FORMATO_DE_FECHA_INVALIDO);
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMyyyy");
+    simpleDateFormat.setLenient(false);
+    Date expiry = null;
     try {
-      month = Integer.valueOf(monthString);
-      year = Integer.valueOf(yearString);
-    } catch (Exception ex) {
+      expiry = simpleDateFormat.parse(cced);
+    } catch (ParseException e) {
       throw new InvalidArgumentException(FORMATO_DE_FECHA_INVALIDO);
     }
-
-    return null;
+    checkArgument(expiry.after(current), "Tarjeta expirada");
+    return new CreditCardImpl(Integer.valueOf(cco), cced, ccn);
   }
 }
