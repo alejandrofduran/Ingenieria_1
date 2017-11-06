@@ -6,10 +6,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import model.Cart;
+import model.Cashier;
 import model.Client;
 import model.CreditCard;
+import model.Sale;
 import modelImpl.ClientImpl;
 import processor.MerchantProcessor;
+import service.CartService;
+import service.ClientService;
+import service.CreditCardService;
+import service.PurchaseService;
+import service.TimeService;
 
 public class MockFactory {
 
@@ -155,4 +162,72 @@ public class MockFactory {
     return clients;
   }
 
+  public static Cashier validCahier() {
+    return new Cashier() {
+      @Override
+      public double checkOut(Cart cart, CreditCard creditCard) {
+        return 0;
+      }
+    };
+  }
+
+  public static ClientService validClientService() {
+    return new ClientService() {
+      @Override
+      public Client findClient(Long clientId, String password) {
+        return validClient();
+      }
+    };
+  }
+
+  public static CartService validCartService() {
+    return new CartService() {
+      @Override
+      public Cart createCart(Client client, Date current) {
+        return cartWithNoBooks();
+      }
+
+      @Override
+      public void addToCart(Long cartId, String bookIsn, Integer bookQuantity, Date current) {
+
+      }
+
+      @Override
+      public Cart findCart(Long cartId) {
+        return cartWithNoBooks();
+      }
+    };
+  }
+
+  public static TimeService validTimeService() {
+    return new TimeService() {
+      @Override
+      public Date getCurrent() {
+        return null;
+      }
+    };
+  }
+
+  public static PurchaseService validPurchaseService() {
+    return new PurchaseService() {
+      @Override
+      public Set<Sale> findSales(Client client) {
+        return new HashSet<>();
+      }
+
+      @Override
+      public Long addSale(Cart cart, double amount) {
+        return null;
+      }
+    };
+  }
+
+  public static CreditCardService validCreditCardService() {
+    return new CreditCardService() {
+      @Override
+      public CreditCard verifyCrediteCard(String ccn, String cced, String cco, Date current) {
+        return validCreditCard();
+      }
+    };
+  }
 }
