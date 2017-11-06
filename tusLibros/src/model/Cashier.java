@@ -5,6 +5,6 @@ import ModelImpl.CartImpl;
 
 public interface Cashier {
 
-  public void checkOut(CartImpl cart, CreditCard creditCard);
+  public void checkOut(Cart cart, CreditCard creditCard);
 
 }

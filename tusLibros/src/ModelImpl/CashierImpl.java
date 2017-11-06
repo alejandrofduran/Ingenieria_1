@@ -5,6 +5,7 @@ import static utils.Utils.checkArgument;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import model.Cart;
 import model.Cashier;
 import model.Client;
 import model.CreditCard;
@@ -20,7 +21,7 @@ public class CashierImpl implements Cashier {
   private Map<Client, Set<Sale>> salesPerClient = new HashMap<>();
 
 
-  public void checkOut(CartImpl cart, CreditCard creditCard) {
+  public void checkOut(Cart cart, CreditCard creditCard) {
     checkArgument(!cart.itemsList().isEmpty(), CARRITO_VACIO_ERR);
     checkArgument(creditCard.isValid(), TARJETA_INVALIDA);
     double price = 0;
@@ -30,7 +31,6 @@ public class CashierImpl implements Cashier {
     }
     merchantProcessor
         .debit(price, creditCard.number(), creditCard.creditCardExpiration(), creditCard.owner());
-
-  }
+    }
 
 }
