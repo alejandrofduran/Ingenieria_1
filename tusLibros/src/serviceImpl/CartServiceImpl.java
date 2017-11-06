@@ -13,11 +13,17 @@ import service.CartService;
 
 public class CartServiceImpl implements CartService {
 
+  public static final String CATALOGO_VACIO = "Catalogo vacio";
+  public static final String CATALOGO_INVALIDO = "Catalogo invalido";
+  public static final String FIRST_ID_INVALIDO = "First id Invalido";
   private Long nextId;
   private Set<String> catalogueIsbn;
   private Map<Long, Cart> clientsCarts;
 
   public CartServiceImpl(Long firstId, Set<String> catalogueIsbn) {
+    checkArgument(catalogueIsbn != null, CATALOGO_INVALIDO);
+    checkArgument(!catalogueIsbn.isEmpty(), CATALOGO_VACIO);
+    checkArgument(firstId != null, FIRST_ID_INVALIDO);
     this.catalogueIsbn = catalogueIsbn;
     this.nextId = firstId;
     this.clientsCarts = new HashMap<>();
