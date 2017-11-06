@@ -28,6 +28,17 @@ public class TusLibrosServiceImpl implements TusLibrosService {
 
   private CreditCardService creditCardService;
 
+  public TusLibrosServiceImpl(Cashier cashier, ClientService clientService,
+      CartService cartService, TimeService timeService, PurchaseService purchaseService,
+      CreditCardService creditCardService) {
+    this.cashier = cashier;
+    this.clientService = clientService;
+    this.cartService = cartService;
+    this.timeService = timeService;
+    this.purchaseService = purchaseService;
+    this.creditCardService = creditCardService;
+  }
+
   @Override
   public Long createCart(Long clientId, String password) {
     Client client = clientService.findClient(clientId, password);

@@ -12,7 +12,6 @@ public class ClientServiceImpl implements ClientService {
 
   private Map<Long, Client> clientsMap;
 
-
   public ClientServiceImpl(Set<Client> clients) {
     clientsMap = new HashMap<>();
     for (Client client : clients) {
