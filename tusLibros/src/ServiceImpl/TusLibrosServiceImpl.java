@@ -6,18 +6,17 @@ import model.Cart;
 import model.Cashier;
 import model.Client;
 import model.Sale;
-import modelImpl.CashierImpl;
 import service.CartService;
 import service.ClientService;
 import service.TusLibrosService;
 
 public class TusLibrosServiceImpl implements TusLibrosService {
 
-  private Cashier cashier = new CashierImpl();
+  private Cashier cashier;
 
-  private ClientService clientService = new ClientServiceImpl();
+  private ClientService clientService;
 
-  private CartService cartService = new CartServiceImpl();
+  private CartService cartService;
 
   @Override
   public Long createCart(Long clientId, String password) {
