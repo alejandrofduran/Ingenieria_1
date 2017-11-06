@@ -4,9 +4,10 @@
  * and open the template in the editor.
  */
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import exceptions.InvalidArgumentException;
 import java.util.Date;
@@ -47,7 +48,12 @@ public class CartTest {
 
   @Test
   public void testCreateCart() {
-    Cart cart = new CartImpl(1L, catalogueIsbn, new Date(), client);
+    Date date = new Date();
+    Cart cart = new CartImpl(1L, catalogueIsbn, date, client);
+    assertTrue(cart.itemsList().isEmpty());
+    assertThat(cart.client(), is(client));
+    assertThat(cart.id(), is(1L));
+    assertThat(cart.lastOperation(), is(date));
   }
 
   @Test
@@ -57,15 +63,32 @@ public class CartTest {
     Cart cart = new CartImpl(null, catalogueIsbn, new Date(), client);
   }
 
-  /**
-   * Test of createCart method, of class CartImpl.
-   */
   @Test
-  public void testWhenTheCartHasIdAndIsEmpty() {
-    Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn, new Date(), client);
-    Map<String, Integer> libbros = carrito.itemsList();
-    assertNotEquals(null, carrito.id());
-    assertEquals(0, libbros.size());
+  public void testCreateCartWithNullCatalogue() {
+    expectedException.expect(InvalidArgumentException.class);
+    expectedException.expectMessage(CartImpl.CATALOGO_INVALIDO);
+    Cart cart = new CartImpl(1L, null, new Date(), client);
+  }
+
+  @Test
+  public void testCreateCartWithEmptyCatalogue() {
+    expectedException.expect(InvalidArgumentException.class);
+    expectedException.expectMessage(CartImpl.CATALOGO_VACIO);
+    Cart cart = new CartImpl(1L, new HashSet<>(), new Date(), client);
+  }
+
+  @Test
+  public void testCreateCartWithNullDate() {
+    expectedException.expect(InvalidArgumentException.class);
+    expectedException.expectMessage(CartImpl.FECHA_ACTUAL_INVALIDA);
+    Cart cart = new CartImpl(1L, catalogueIsbn, null, client);
+  }
+
+  @Test
+  public void testCreateCartWithNullClient() {
+    expectedException.expect(InvalidArgumentException.class);
+    expectedException.expectMessage(CartImpl.CLIENTE_INVALIDO);
+    Cart cart = new CartImpl(1L, catalogueIsbn, new Date(), null);
   }
 
   @Test
@@ -84,60 +107,53 @@ public class CartTest {
   @Test
   public void testAddNotCatalogBook() {
     Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn, new Date(), client);
-    try {
-      carrito.add(ISBN_QUE_NO_ESTA_EN_CATALGO, 3, new Date());
-      fail();
-    } catch (InvalidArgumentException invalidBook) {
-      assertEquals(CartImpl.MSG_ERROR_LIBRO_INVALIDO, invalidBook.getMessage());
-    }
+    expectedException.expect(InvalidArgumentException.class);
+    expectedException.expectMessage(CartImpl.MSG_ERROR_LIBRO_INVALIDO);
+    carrito.add(ISBN_QUE_NO_ESTA_EN_CATALGO, 3, new Date());
   }
 
   @Test
   public void testAddInvalidQuantityForBook() {
-    Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn, new Date(), client);
-    try {
-      carrito.add(ISBN_EN_CATALGO_UNO, 0, new Date());
-      fail();
-    } catch (InvalidArgumentException invalidQuantity) {
-      assertEquals(CartImpl.MSG_ERROR_CANTIDAD, invalidQuantity.getMessage());
-    }
+    Date date = new Date();
+    Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn, date, client);
+    expectedException.expect(InvalidArgumentException.class);
+    expectedException.expectMessage(CartImpl.MSG_ERROR_CANTIDAD);
+    carrito.add(ISBN_EN_CATALGO_UNO, 0, new Date());
+    assertEquals(date, carrito.lastOperation());
   }
 
   @Test
   public void testWhenAddingAnInvalidBookDoNotLoseTheRestOfTheBooksInTheCart() {
     Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn, new Date(), client);
-    try {
-      carrito.add(ISBN_EN_CATALGO_UNO, 3, new Date());
-      carrito.add(ISBN_EN_CATALGO_UNO, 5, new Date());
-      carrito.add(ISBN_EN_CATALGO_DOS, 3, new Date());
-      carrito.add(ISBN_QUE_NO_ESTA_EN_CATALGO, 3, new Date());
-      fail();
-    } catch (InvalidArgumentException invalidBook) {
-      Map<String, Integer> libbros = carrito.itemsList();
-      assertEquals(2, libbros.size());
-      assertEquals(8, libbros.get(ISBN_EN_CATALGO_UNO).longValue());
-      assertEquals(3, libbros.get(ISBN_EN_CATALGO_DOS).longValue());
-      assertEquals(CartImpl.MSG_ERROR_LIBRO_INVALIDO, invalidBook.getMessage());
-    }
+    Date date = new Date();
+    carrito.add(ISBN_EN_CATALGO_UNO, 3, date);
+    carrito.add(ISBN_EN_CATALGO_UNO, 5, date);
+    carrito.add(ISBN_EN_CATALGO_DOS, 3, date);
+    expectedException.expect(InvalidArgumentException.class);
+    expectedException.expectMessage(CartImpl.MSG_ERROR_LIBRO_INVALIDO);
+    carrito.add(ISBN_QUE_NO_ESTA_EN_CATALGO, 3, new Date());
+    Map<String, Integer> libbros = carrito.itemsList();
+    assertEquals(2, libbros.size());
+    assertEquals(8, libbros.get(ISBN_EN_CATALGO_UNO).longValue());
+    assertEquals(3, libbros.get(ISBN_EN_CATALGO_DOS).longValue());
+    assertEquals(date, carrito.lastOperation());
   }
 
   @Test
   public void testWhenAddingAnInvalidQuantityForBookDoNotLoseTheRestOfTheBooksInTheCart() {
     Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn, new Date(), client);
-    try {
-      carrito.add(ISBN_EN_CATALGO_UNO, 3, new Date());
-      carrito.add(ISBN_EN_CATALGO_UNO, 5, new Date());
-      carrito.add(ISBN_EN_CATALGO_DOS, 3, new Date());
-      carrito.add(ISBN_EN_CATALGO_UNO, -3, new Date());
-      fail();
-    } catch (InvalidArgumentException invalidQuantity) {
-      Map<String, Integer> libbros = carrito.itemsList();
-      assertEquals(2, libbros.size());
-      assertEquals(8, libbros.get(ISBN_EN_CATALGO_UNO).intValue());
-      assertEquals(3, libbros.get(ISBN_EN_CATALGO_DOS).intValue());
-      assertEquals(CartImpl.MSG_ERROR_CANTIDAD, invalidQuantity.getMessage());
-    }
-
+    Date date = new Date();
+    carrito.add(ISBN_EN_CATALGO_UNO, 3, date);
+    carrito.add(ISBN_EN_CATALGO_UNO, 5, date);
+    carrito.add(ISBN_EN_CATALGO_DOS, 3, date);
+    expectedException.expect(InvalidArgumentException.class);
+    expectedException.expectMessage(CartImpl.MSG_ERROR_CANTIDAD);
+    carrito.add(ISBN_EN_CATALGO_UNO, -3, new Date());
+    Map<String, Integer> libbros = carrito.itemsList();
+    assertEquals(2, libbros.size());
+    assertEquals(8, libbros.get(ISBN_EN_CATALGO_UNO).intValue());
+    assertEquals(3, libbros.get(ISBN_EN_CATALGO_DOS).intValue());
+    assertEquals(date, carrito.lastOperation());
   }
 
 }
