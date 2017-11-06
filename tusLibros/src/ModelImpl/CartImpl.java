@@ -26,6 +26,7 @@ public class CartImpl implements Cart {
   public static final String CATALOGO_VACIO = "Catalogo vacio";
   public static final String CATALOGO_INVALIDO = "Catalogo invalido";
   public static final String FECHA_ACTUAL_INVALIDA = "Fecha actual invalida";
+  public static final String CLIENTE_INVALIDO = "Cliente invalido";
   private static int halfAndHourMillis = 30 * 60 * 1000;
   Set<String> catalogueIsbn;
   private Long cartId = null;
@@ -38,6 +39,7 @@ public class CartImpl implements Cart {
     checkArgument(catalogueIsbn != null, CATALOGO_INVALIDO);
     checkArgument(!catalogueIsbn.isEmpty(), CATALOGO_VACIO);
     checkArgument(current != null, FECHA_ACTUAL_INVALIDA);
+    checkArgument(client != null, CLIENTE_INVALIDO);
     this.cartId = cartId;
     this.catalogueIsbn = catalogueIsbn;
     this.listBookIsbn = new HashMap<String, Integer>();

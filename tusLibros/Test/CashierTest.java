@@ -16,6 +16,7 @@ import modelImpl.ClientImpl;
 import modelImpl.CreditCardImpl;
 import org.junit.Before;
 import org.junit.Test;
+import processor.MerchantProcessor;
 
 public class CashierTest {
 
@@ -27,10 +28,11 @@ public class CashierTest {
   private CreditCard creditCard;
   private MockFactory mockFactory = new MockFactory();
   private Client client;
+  private MerchantProcessor merchantProcessor = MockFactory.validMerchatProcessor();
 
   @Before
   public void setUp() {
-    cashier = new CashierImpl(new HashMap<>());
+    cashier = new CashierImpl(new HashMap<>(), merchantProcessor);
     catalog = new HashSet<String>();
     catalog.add(laBiblia);
     catalog.add(elAnticristo);
@@ -41,13 +43,13 @@ public class CashierTest {
 
   @Test
   public void testCreateCashier() {
-    CashierImpl cashier = new CashierImpl(new HashMap<>());
+    CashierImpl cashier = new CashierImpl(new HashMap<>(), merchantProcessor);
   }
 
   @Test
   public void testCheckOutWithEmptyCart() {
     CartImpl emtpycart = new CartImpl(1L, new HashSet<>(), new Date(), client);
-    CashierImpl cashier = new CashierImpl(new HashMap<>());
+    CashierImpl cashier = new CashierImpl(new HashMap<>(), merchantProcessor);
     try {
       cashier.checkOut(emtpycart, creditCard);
       fail();

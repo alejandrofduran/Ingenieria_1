@@ -18,7 +18,9 @@ import model.Client;
 import modelImpl.CartImpl;
 import modelImpl.ClientImpl;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * @author Cronos
@@ -29,7 +31,8 @@ public class CartTest {
   private final static String ISBN_EN_CATALGO_UNO = "ISBN 1";
   private final static String ISBN_EN_CATALGO_DOS = "ISBN 2";
   private final static String ISBN_QUE_NO_ESTA_EN_CATALGO = "";
-
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
   private Set<String> catalogueIsbn;
   private Client client;
 
@@ -39,6 +42,19 @@ public class CartTest {
     catalogueIsbn.add(ISBN_EN_CATALGO_UNO);
     catalogueIsbn.add(ISBN_EN_CATALGO_DOS);
     client = new ClientImpl("John Doe", "pass", 1l);
+  }
+
+
+  @Test
+  public void testCreateCart() {
+    Cart cart = new CartImpl(1L, catalogueIsbn, new Date(), client);
+  }
+
+  @Test
+  public void testCreateCartWithNullId() {
+    expectedException.expect(InvalidArgumentException.class);
+    expectedException.expectMessage(CartImpl.ID_INVALIDO);
+    Cart cart = new CartImpl(null, catalogueIsbn, new Date(), client);
   }
 
   /**
