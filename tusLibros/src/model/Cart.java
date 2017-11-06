@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +20,9 @@ public class Cart {
 
   Long cartId = null;
   Set<String> catalogueIsbn;
-  Map<String, Integer> listBookIsbn;
+  private Map<String, Integer> listBookIsbn;
+  private Date creation;
+  private Date lastPurchase;
 
   public Cart(Long cartId, Set<String> catalogueIsbn) {
     this.cartId = cartId;
