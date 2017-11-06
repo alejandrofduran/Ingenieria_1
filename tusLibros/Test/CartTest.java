@@ -10,6 +10,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import exceptions.InvalidArgumentException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -155,5 +156,24 @@ public class CartTest {
     assertEquals(3, libbros.get(ISBN_EN_CATALGO_DOS).intValue());
     assertEquals(date, carrito.lastOperation());
   }
+
+  @Test
+  public void testAddToCartAfter30Minutes() {
+    Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn, new Date(), client);
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.MINUTE, 30);
+    expectedException.expect(InvalidArgumentException.class);
+    expectedException.expectMessage(CartImpl.MSG_ERROR_CARRITO_EXPIRADO);
+    carrito.add(ISBN_EN_CATALGO_UNO, 5, calendar.getTime());
+  }
+
+  @Test
+  public void testAddToCartAfter29Minutes() {
+    Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn, new Date(), client);
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.MINUTE, 29);
+    carrito.add(ISBN_EN_CATALGO_UNO, 5, calendar.getTime());
+  }
+
 
 }

@@ -16,6 +16,8 @@ public class CartServiceImpl implements CartService {
   public static final String CATALOGO_VACIO = "Catalogo vacio";
   public static final String CATALOGO_INVALIDO = "Catalogo invalido";
   public static final String FIRST_ID_INVALIDO = "First id Invalido";
+  public static final String CARRITO_NO_ENCONTRADO = "Carrito no encontrado";
+  public static final String LIBRO_FUERA_DEL_CATALOGO = "Libro fuera del catalogo";
   private Long nextId;
   private Set<String> catalogueIsbn;
   private Map<Long, Cart> clientsCarts;
@@ -32,8 +34,8 @@ public class CartServiceImpl implements CartService {
   @Override
   public Cart createCart(Client client, Date current) {
     Cart cart = new CartImpl(nextId, catalogueIsbn, current, client);
-    nextId++;
     clientsCarts.put(nextId, cart);
+    nextId++;
     return cart;
   }
 
@@ -46,7 +48,7 @@ public class CartServiceImpl implements CartService {
   @Override
   public Cart findCart(Long cartId) {
     Cart cart = clientsCarts.get(cartId);
-    checkArgument(cart != null, "Carrito no encontrado");
+    checkArgument(cart != null, CARRITO_NO_ENCONTRADO);
     return cart;
   }
 
