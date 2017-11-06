@@ -18,8 +18,10 @@ public class CashierImpl implements Cashier {
   public static final String TARJETA_INVALIDA = "Tarjeta invalida";
   private Map<String, Integer> prices;
   private MerchantProcessor merchantProcessor;
-  private Map<Client, Set<Sale>> salesPerClient = new HashMap<>();
 
+  public CashierImpl(Map<String, Integer> prices) {
+    this.prices = prices;
+  }
 
   public void checkOut(Cart cart, CreditCard creditCard) {
     checkArgument(!cart.itemsList().isEmpty(), CARRITO_VACIO_ERR);

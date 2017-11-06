@@ -14,4 +14,5 @@ public interface TusLibrosService {
 
   public Set<Sale> listPurchases(Long id, String password);
 
+  public Long checkOut(Long cartId, String ccn, String cced, String cco);
 }

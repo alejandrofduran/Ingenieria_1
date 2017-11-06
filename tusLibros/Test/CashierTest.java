@@ -2,14 +2,17 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import modelImpl.CartImpl;
-import modelImpl.CashierImpl;
-import modelImpl.CreditCardImpl;
 import exceptions.InvalidArgumentException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import mock.MockFactory;
+import model.Client;
 import model.CreditCard;
+import modelImpl.CartImpl;
+import modelImpl.CashierImpl;
+import modelImpl.ClientImpl;
+import modelImpl.CreditCardImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,6 +25,7 @@ public class CashierTest {
   private String elAnticristo = "El anticristo";
   private CreditCard creditCard;
   private MockFactory mockFactory = new MockFactory();
+  private Client client;
 
   @Before
   public void setUp() {
@@ -30,7 +34,8 @@ public class CashierTest {
     catalog.add(laBiblia);
     catalog.add(elAnticristo);
     creditCard = new CreditCardImpl(123, "012019", "John Doe");
-    cart = new CartImpl(1l, catalog);
+    client = new ClientImpl("John Doe", "pass", 1l);
+    cart = new CartImpl(1l, catalog, new Date(), client);
   }
 
   @Test
@@ -40,7 +45,7 @@ public class CashierTest {
 
   @Test
   public void testCheckOutWithEmptyCart() {
-    CartImpl emtpycart = new CartImpl(1L, new HashSet<>());
+    CartImpl emtpycart = new CartImpl(1L, new HashSet<>(), new Date(), client);
     CashierImpl cashier = new CashierImpl();
     try {
       cashier.checkOut(emtpycart, creditCard);
@@ -52,13 +57,13 @@ public class CashierTest {
 
   @Test
   public void testCheckOutWithNotEmptyCart() {
-    cart.add(laBiblia, 666);
+    cart.add(laBiblia, 666, new Date());
     cashier.checkOut(cart, creditCard);
   }
 
   @Test
   public void testCheckOutWithInvalidCreditCard() {
-    cart.add(laBiblia, 666);
+    cart.add(laBiblia, 666, new Date());
     try {
       cashier.checkOut(cart, mockFactory.newInvalidCreditCard());
       fail();
@@ -69,7 +74,7 @@ public class CashierTest {
 
   @Test
   public void testCheckOutWithValidCreditCard() {
-    cart.add(laBiblia, 666);
+    cart.add(laBiblia, 666, new Date());
     cashier.checkOut(cart, mockFactory.newValidCreditCard());
   }
 }
