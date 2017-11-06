@@ -3,6 +3,7 @@ import static org.junit.Assert.assertEquals;
 import exceptions.InvalidArgumentException;
 import java.util.HashSet;
 import java.util.Set;
+import mock.MockFactory;
 import model.Client;
 import modelImpl.ClientImpl;
 import org.junit.Before;
@@ -35,6 +36,15 @@ public class ClientServiceTest {
     assertEquals(clienteUno.id(), cliente.id());
     assertEquals(clienteUno.name(), cliente.name());
     assertEquals(clienteUno.password(), cliente.password());
+  }
+
+  @Test
+  public void testCreateInvalid() {
+    Set<Client> invalidListaClientes = new HashSet<Client>();
+    invalidListaClientes.add(MockFactory.clientWithNullId());
+    expectedException.expect(InvalidArgumentException.class);
+    expectedException.expectMessage("Id de cliente invalido");
+    ClientService clientService = new ClientServiceImpl(invalidListaClientes);
   }
 
   @Test
