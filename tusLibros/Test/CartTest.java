@@ -12,6 +12,7 @@ import ModelImpl.CartImpl;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import model.Cart;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +40,7 @@ public class CartTest {
    */
   @Test
   public void testWhenTheCartHasIdAndIsEmpty() {
-    CartImpl carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
+    Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
     Map<String, Integer> libbros = carrito.itemsList();
     assertNotEquals(null, carrito.id());
     assertEquals(0, libbros.size());
@@ -47,7 +48,7 @@ public class CartTest {
 
   @Test
   public void testAddCatalogBooks() {
-    CartImpl carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
+    Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
     carrito.add(ISBN_EN_CATALGO_UNO, 3);
     carrito.add(ISBN_EN_CATALGO_UNO, 5);
     carrito.add(ISBN_EN_CATALGO_DOS, 3);
@@ -60,7 +61,7 @@ public class CartTest {
 
   @Test
   public void testAddNotCatalogBook() {
-    CartImpl carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
+    Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
     try {
       carrito.add(ISBN_QUE_NO_ESTA_EN_CATALGO, 3);
       fail();
@@ -71,7 +72,7 @@ public class CartTest {
 
   @Test
   public void testAddInvalidQuantityForBook() {
-    CartImpl carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
+    Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
     try {
       carrito.add(ISBN_EN_CATALGO_UNO, 0);
       fail();
@@ -82,7 +83,7 @@ public class CartTest {
 
   @Test
   public void testWhenAddingAnInvalidBookDoNotLoseTheRestOfTheBooksInTheCart() {
-    CartImpl carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
+    Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
     try {
       carrito.add(ISBN_EN_CATALGO_UNO, 3);
       carrito.add(ISBN_EN_CATALGO_UNO, 5);
@@ -100,7 +101,7 @@ public class CartTest {
 
   @Test
   public void testWhenAddingAnInvalidQuantityForBookDoNotLoseTheRestOfTheBooksInTheCart() {
-    CartImpl carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
+    Cart carrito = new CartImpl(CLIENT_ID_UNO, catalogueIsbn);
     try {
       carrito.add(ISBN_EN_CATALGO_UNO, 3);
       carrito.add(ISBN_EN_CATALGO_UNO, 5);
@@ -115,11 +116,6 @@ public class CartTest {
       assertEquals(CartImpl.MSG_ERROR_CANTIDAD, invalidQuantity.getMessage());
     }
 
-  }
-
-  @Test
-  public void testRemoveFromCart() {
-    CartImpl cart = new CartImpl(CLIENT_ID_UNO,catalogueIsbn);
   }
 
 }
