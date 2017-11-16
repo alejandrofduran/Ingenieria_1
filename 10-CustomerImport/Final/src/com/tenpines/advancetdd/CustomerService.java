@@ -6,5 +6,10 @@ public interface CustomerService {
 
   void persist(Customer newCustomer);
 
-  List<Customer> list();
+  List<CustomerDTO> list();
+
+  List<CustomerDTO> customerIdentifiedAs(String idType, String idNumber);
+
+  public void finalize();
+
 }

@@ -10,19 +10,11 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.function.Consumer;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class CustomerImporterTest {
-
-  private Session session;
 
   private CustomerService customerService;
 
@@ -35,7 +27,7 @@ public class CustomerImporterTest {
   }
 
   public int numberOfCustomers() {
-    List<Customer> customers = customerService.list();
+    List<CustomerDTO> customers = customerService.list();
     int size = customers.size();
     return size;
   }
@@ -75,7 +67,7 @@ public class CustomerImporterTest {
     } catch (RuntimeException e) {
       assertEquals(
           CustomerImporter.INVALID_RECORD_TYPE, e.getMessage());
-      Customer customer = customerIdentifiedAs("D", "22333444");
+      CustomerDTO customer = customerIdentifiedAs("D", "22333444");
       assertTrue(customer.addressesIsEmpty());
     }
   }
@@ -89,7 +81,7 @@ public class CustomerImporterTest {
     } catch (RuntimeException e) {
       assertEquals(
           CustomerImporter.INVALID_ADDRESS_RECORD, e.getMessage());
-      Customer customer = customerIdentifiedAs("D", "22333444");
+      CustomerDTO customer = customerIdentifiedAs("D", "22333444");
       assertTrue(customer.addressesIsEmpty());
     }
 
@@ -100,7 +92,7 @@ public class CustomerImporterTest {
     shouldFaildImporting(addressRecordWithMoreThanSixFields(),
         e -> {
           assertEquals(CustomerImporter.INVALID_ADDRESS_RECORD, e.getMessage());
-          Customer customer = customerIdentifiedAs("D", "22333444");
+          CustomerDTO customer = customerIdentifiedAs("D", "22333444");
           assertTrue(customer.addressesIsEmpty());
         });
 
@@ -218,8 +210,8 @@ public class CustomerImporterTest {
   }
 
   public void assertJuanPerezWasImportedCorrectly() {
-    Customer customer;
-    Address address;
+    CustomerDTO customer;
+    AddressDTO address;
     customer = customerIdentifiedAs("C", "23-25666777-9");
     assertEquals("Juan", customer.getFirstName());
     assertEquals("Perez", customer.getLastName());
@@ -234,12 +226,10 @@ public class CustomerImporterTest {
     assertEquals("CABA", address.getProvince());
   }
 
-  public Customer customerIdentifiedAs(String idType, String idNumber) {
-    List<Customer> customers;
-    Customer customer;
-    customers = session.createCriteria(Customer.class).
-        add(Restrictions.eq("identificationType", idType)).
-        add(Restrictions.eq("identificationNumber", idNumber)).list();
+  public CustomerDTO customerIdentifiedAs(String idType, String idNumber) {
+    List<CustomerDTO> customers;
+    CustomerDTO customer;
+    customers = customerService.customerIdentifiedAs(idType, idNumber);
     assertEquals(1, customers.size());
     customer = customers.get(0);
     return customer;
@@ -247,14 +237,14 @@ public class CustomerImporterTest {
 
   public void assertPepeSanchezWasImportedCorrectly() {
 
-    Customer customer = customerIdentifiedAs("D", "22333444");
+    CustomerDTO customer = customerIdentifiedAs("D", "22333444");
     assertEquals("Pepe", customer.getFirstName());
     assertEquals("Sanchez", customer.getLastName());
     assertEquals("D", customer.getIdentificationType());
     assertEquals("22333444", customer.getIdentificationNumber());
 
     assertEquals(2, customer.numberOfAddresses());
-    Address address = customer.addressAt("San Martin");
+    AddressDTO address = customer.addressAt("San Martin");
     assertEquals(3322, address.getStreetNumber());
     assertEquals("Olivos", address.getTown());
     assertEquals(1636, address.getZipCode());
@@ -269,21 +259,12 @@ public class CustomerImporterTest {
 
   @After
   public void closeSession() {
-    session.getTransaction().commit();
-    session.close();
+    customerService.finalize();
   }
 
   @Before
   public void openSession() {
-    Configuration configuration = new Configuration();
-    configuration.configure();
-
-    ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
-        .applySettings(configuration.getProperties()).buildServiceRegistry();
-    SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-    session = sessionFactory.openSession();
-    session.beginTransaction();
-    customerService =  new CustomerServiceImpl(session);
+    customerService = new CustomerServiceImpl();
   }
 
 }

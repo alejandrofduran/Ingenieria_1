@@ -3,7 +3,6 @@ package com.tenpines.advancetdd;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
-import org.hibernate.Session;
 
 public class CustomerImporter {
 

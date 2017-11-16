@@ -1,10 +1,7 @@
 package com.tenpines.advancetdd;
 
-import java.io.FileReader;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.management.RuntimeErrorException;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,95 +9,107 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
-
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table( name = "CUSTOMERS" )
+@Table(name = "CUSTOMERS")
 public class Customer {
 
-	@Id
-	@GeneratedValue
-	private long id;
-	@NotEmpty
-	private String firstName;
-	@NotEmpty
-	private String lastName;
-	@Pattern(regexp="D|C")
-	private String identificationType;
-	@NotEmpty
-	private String identificationNumber;
-	@OneToMany(cascade = CascadeType.ALL)
-	private Set<Address> addresses;
-	
-	public Customer()
-	{
-		addresses = new HashSet<Address>();
-	}
+  @Id
+  @GeneratedValue
+  private long id;
+  @NotEmpty
+  private String firstName;
+  @NotEmpty
+  private String lastName;
+  @Pattern(regexp = "D|C")
+  private String identificationType;
+  @NotEmpty
+  private String identificationNumber;
+  @OneToMany(cascade = CascadeType.ALL)
+  private Set<Address> addresses;
 
-	public long getId() {
-		return id;
-	}
+  public Customer() {
+    addresses = new HashSet<Address>();
+  }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+  public long getId() {
+    return id;
+  }
 
-	public String getFirstName() {
-		return firstName;
-	}
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+  public String getFirstName() {
+    return firstName;
+  }
 
-	public String getLastName() {
-		return lastName;
-	}
+  public Customer setFirstName(String firstName) {
+    this.firstName = firstName;
+    return this;
+  }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+  public String getLastName() {
+    return lastName;
+  }
 
-	public String getIdentificationType() {
-		return identificationType;
-	}
+  public Customer setLastName(String lastName) {
+    this.lastName = lastName;
+    return this;
+  }
 
-	public void setIdentificationType(String identificationType) {
-		this.identificationType = identificationType;
-	}
+  public String getIdentificationType() {
+    return identificationType;
+  }
 
-	public String getIdentificationNumber() {
-		return identificationNumber;
-	}
+  public Customer setIdentificationType(String identificationType) {
+    this.identificationType = identificationType;
+    return this;
+  }
 
-	public void setIdentificationNumber(String identificationNumber) {
-		this.identificationNumber = identificationNumber;
-	}
+  public String getIdentificationNumber() {
+    return identificationNumber;
+  }
 
-	public void addAddress(Address anAddress){
-		addresses.add(anAddress);
-	}
+  public Customer setIdentificationNumber(String identificationNumber) {
+    this.identificationNumber = identificationNumber;
+    return this;
+  }
 
-	public Address firstAddress() {
-		return addresses.iterator().next();
-	}
+  public void addAddress(Address anAddress) {
+    addresses.add(anAddress);
+  }
 
-	public int numberOfAddresses() {
-		return addresses.size();
-	}
+  public Address firstAddress() {
+    return addresses.iterator().next();
+  }
 
-	public Address addressAt(String aStreetName) {
-		for (Address address : addresses) 
-			if(address.isAt(aStreetName))
-				return address;
-		
-		throw new RuntimeException("no se encontro...");
-	}
+  public int numberOfAddresses() {
+    return addresses.size();
+  }
 
-	public boolean addressesIsEmpty() {
-		return addresses.isEmpty();
-	}
+  public Address addressAt(String aStreetName) {
+    for (Address address : addresses) {
+      if (address.isAt(aStreetName)) {
+        return address;
+      }
+    }
 
-	
+    throw new RuntimeException("no se encontro...");
+  }
+
+  public boolean addressesIsEmpty() {
+    return addresses.isEmpty();
+  }
+
+
+  public Set<Address> getAddresses() {
+    return addresses;
+  }
+
+  public Customer setAddresses(Set<Address> addresses) {
+    this.addresses = addresses;
+    return this;
+  }
 }
