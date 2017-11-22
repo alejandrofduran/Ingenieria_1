@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface CustomerService {
 
-  void persist(Customer newCustomer);
+  Long persist(CustomerDTO newCustomer);
 
   List<CustomerDTO> list();
 

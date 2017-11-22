@@ -28,8 +28,23 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public void persist(Customer newCustomer) {
-    session.persist(newCustomer);
+  public Long persist(CustomerDTO newCustomer) {
+    Customer customer = null;
+    if (newCustomer.getId() != null) {
+      customer = (Customer) session.get(Customer.class, newCustomer.getId());
+      assemblyCustomer(newCustomer, customer);
+    } else {
+      customer = assemblyCustomer(newCustomer);
+    }
+    session.persist(customer);
+    return customer.getId();
+  }
+
+  private void assemblyCustomer(CustomerDTO dto, Customer customer) {
+    customer.setFirstName(dto.getFirstName())
+        .setIdentificationNumber(dto.getIdentificationNumber())
+        .setIdentificationType(dto.getIdentificationType()).setLastName(dto.getLastName())
+        .setAddresses(assemblyAdresses(dto.getAddresses())).setId(dto.getId());
   }
 
   private Customer assemblyCustomer(CustomerDTO dto) {

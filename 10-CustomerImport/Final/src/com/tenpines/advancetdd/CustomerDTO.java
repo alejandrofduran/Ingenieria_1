@@ -5,14 +5,14 @@ import java.util.Set;
 
 public class CustomerDTO {
 
-  private long id;
+  private Long id;
   private String firstName;
   private String lastName;
   private String identificationType;
   private String identificationNumber;
   private Set<AddressDTO> addresses = new HashSet<>();
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 

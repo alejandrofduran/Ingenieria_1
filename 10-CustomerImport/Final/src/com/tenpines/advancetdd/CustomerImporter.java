@@ -12,7 +12,7 @@ public class CustomerImporter {
   public static final String INVALID_CUSTOMER_RECORD = "Registro de cliente invalido";
   private String line;
   private LineNumberReader lineReader;
-  private Customer newCustomer;
+  private CustomerDTO newCustomer;
   private String[] record;
   private CustomerService customerService;
 
@@ -51,7 +51,7 @@ public class CustomerImporter {
       throw new RuntimeException(INVALID_ADDRESS_RECORD);
     }
 
-    Address newAddress = new Address();
+    AddressDTO newAddress = new AddressDTO();
 
     newCustomer.addAddress(newAddress);
     newAddress.setStreetName(record[1]);
@@ -59,6 +59,7 @@ public class CustomerImporter {
     newAddress.setTown(record[3]);
     newAddress.setZipCode(Integer.parseInt(record[4]));
     newAddress.setProvince(record[5]);
+    customerService.persist(newCustomer);
   }
 
   public boolean invalidAddressRecordSize() {
@@ -74,12 +75,12 @@ public class CustomerImporter {
       throw new RuntimeException(INVALID_CUSTOMER_RECORD);
     }
 
-    newCustomer = new Customer();
+    newCustomer = new CustomerDTO();
     newCustomer.setFirstName(record[1]);
     newCustomer.setLastName(record[2]);
     newCustomer.setIdentificationType(record[3]);
     newCustomer.setIdentificationNumber(record[4]);
-    customerService.persist(newCustomer);
+    newCustomer.setId(customerService.persist(newCustomer));
   }
 
   public boolean invalidCustomerRecordSize() {
