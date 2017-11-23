@@ -9,6 +9,7 @@ public class TransientEnviroment implements Enviroment {
 
   private Set<CustomerDTO> dtos = new HashSet<>();
   private Long first = 1l;
+  private Set<SupplierDTO> supplierDTOS = new HashSet<>();
 
   @Override
   public Long persistCustomer(CustomerDTO newCustomer) {
@@ -44,6 +45,12 @@ public class TransientEnviroment implements Enviroment {
 
   @Override
   public Long persistSupplier(SupplierDTO supplierDTO) {
-    return null;
+    if (supplierDTOS.contains(supplierDTO)) {
+      return supplierDTO.getId();
+    }
+    supplierDTO.setId(first++);
+    supplierDTOS.add(supplierDTO);
+    return supplierDTO.getId();
   }
+
 }

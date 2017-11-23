@@ -25,12 +25,12 @@ public class SupplierDTO {
     return id;
   }
 
-  public SupplierDTO setId(Long id) {
+  public SupplierDTO setId(long id) {
     this.id = id;
     return this;
   }
 
-  public SupplierDTO setId(long id) {
+  public SupplierDTO setId(Long id) {
     this.id = id;
     return this;
   }
