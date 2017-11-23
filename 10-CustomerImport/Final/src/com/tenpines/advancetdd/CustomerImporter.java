@@ -1,108 +1,26 @@
 package com.tenpines.advancetdd;
 
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.io.Reader;
+public class CustomerImporter extends Importer {
 
-public class CustomerImporter {
-
-  public static final String ADDRESS_WITHOUT_CUSTOMER_ERROR_DESCRIPTION = "Direccion sin cliente";
-  public static final String INVALID_RECORD_TYPE = "Registro invalido";
-  public static final String INVALID_ADDRESS_RECORD = "Registro de direccion invalido";
-  public static final String INVALID_CUSTOMER_RECORD = "Registro de cliente invalido";
-  private String line;
-  private LineNumberReader lineReader;
-  private CustomerDTO newCustomer;
-  private String[] record;
-  private CustomerService customerService;
-
-  //10: Agregar constructor
-  //11: change method signature
-  //12: Inicializar field
-  public CustomerImporter(CustomerService customerService) {
-    this.customerService = customerService;
+  public CustomerImporter(Enviroment customerService) {
+    super(customerService);
   }
 
-  //13: Change method signature
-  public void process(Reader fileReader) throws IOException {
-
-    lineReader = new LineNumberReader(fileReader);
-    while (hasLineToProcess()) {
-      createRecordFromLine();
-      parseRecord();
+  protected void processCurrent() {
+    switch (record[0]) {
+      case "A":
+        if (hasNotImportedCustomer()) {
+          throw new RuntimeException(Importer.ADDRESS_WITHOUT_CUSTOMER_ERROR_DESCRIPTION);
+        }
+        newCustomer.addAddress(addressParser.parseRecord(record));
+        enviroment.persistCustomer(newCustomer);
+        break;
+      case "C":
+        newCustomer = customerParser.parseRecord(record);
+        newCustomer.setId(enviroment.persistCustomer(newCustomer));
+        break;
+      default:
+        throw new RuntimeException(Importer.INVALID_RECORD_TYPE);
     }
   }
-
-  public void parseRecord() {
-    if (isCustomerRecord()) {
-      parseCustomer();
-    } else if (isAddressRecord()) {
-      parseAddress();
-    } else {
-      throw new RuntimeException(INVALID_RECORD_TYPE);
-    }
-  }
-
-  public void parseAddress() {
-    if (hasNotImportedCustomer()) {
-      throw new RuntimeException(ADDRESS_WITHOUT_CUSTOMER_ERROR_DESCRIPTION);
-    }
-    if (invalidAddressRecordSize()) {
-      throw new RuntimeException(INVALID_ADDRESS_RECORD);
-    }
-
-    AddressDTO newAddress = new AddressDTO();
-
-    newCustomer.addAddress(newAddress);
-    newAddress.setStreetName(record[1]);
-    newAddress.setStreetNumber(Integer.parseInt(record[2]));
-    newAddress.setTown(record[3]);
-    newAddress.setZipCode(Integer.parseInt(record[4]));
-    newAddress.setProvince(record[5]);
-    customerService.persist(newCustomer);
-  }
-
-  public boolean invalidAddressRecordSize() {
-    return record.length != 6;
-  }
-
-  public boolean hasNotImportedCustomer() {
-    return newCustomer == null;
-  }
-
-  public void parseCustomer() {
-    if (invalidCustomerRecordSize()) {
-      throw new RuntimeException(INVALID_CUSTOMER_RECORD);
-    }
-
-    newCustomer = new CustomerDTO();
-    newCustomer.setFirstName(record[1]);
-    newCustomer.setLastName(record[2]);
-    newCustomer.setIdentificationType(record[3]);
-    newCustomer.setIdentificationNumber(record[4]);
-    newCustomer.setId(customerService.persist(newCustomer));
-  }
-
-  public boolean invalidCustomerRecordSize() {
-    return record.length != 5;
-  }
-
-  public void createRecordFromLine() {
-    record = line.split(",");
-  }
-
-  public boolean isAddressRecord() {
-    return record[0].equals("A");
-  }
-
-  public boolean isCustomerRecord() {
-    return record[0].equals("C");
-  }
-
-  public boolean hasLineToProcess() throws IOException {
-    line = lineReader.readLine();
-    boolean hasLine = line != null;
-    return hasLine;
-  }
-
 }

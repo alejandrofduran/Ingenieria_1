@@ -16,7 +16,9 @@ import org.junit.Test;
 
 public class CustomerImporterTest {
 
-  private CustomerService customerService;
+  private Enviroment customerService;
+
+  private boolean transientEnviroment = true;
 
   @Test
   public void importsValidDataCorrectly() throws IOException {
@@ -40,7 +42,7 @@ public class CustomerImporterTest {
       fail();
     } catch (RuntimeException e) {
       assertEquals(
-          CustomerImporter.ADDRESS_WITHOUT_CUSTOMER_ERROR_DESCRIPTION, e.getMessage());
+          Importer.ADDRESS_WITHOUT_CUSTOMER_ERROR_DESCRIPTION, e.getMessage());
       assertEquals(0, numberOfCustomers());
     }
   }
@@ -53,7 +55,7 @@ public class CustomerImporterTest {
       fail();
     } catch (RuntimeException e) {
       assertEquals(
-          CustomerImporter.INVALID_RECORD_TYPE, e.getMessage());
+          Importer.INVALID_RECORD_TYPE, e.getMessage());
       assertEquals(0, numberOfCustomers());
     }
   }
@@ -66,7 +68,7 @@ public class CustomerImporterTest {
       fail();
     } catch (RuntimeException e) {
       assertEquals(
-          CustomerImporter.INVALID_RECORD_TYPE, e.getMessage());
+          Importer.INVALID_RECORD_TYPE, e.getMessage());
       CustomerDTO customer = customerIdentifiedAs("D", "22333444");
       assertTrue(customer.addressesIsEmpty());
     }
@@ -80,7 +82,7 @@ public class CustomerImporterTest {
       fail();
     } catch (RuntimeException e) {
       assertEquals(
-          CustomerImporter.INVALID_ADDRESS_RECORD, e.getMessage());
+          Importer.INVALID_ADDRESS_RECORD, e.getMessage());
       CustomerDTO customer = customerIdentifiedAs("D", "22333444");
       assertTrue(customer.addressesIsEmpty());
     }
@@ -91,7 +93,7 @@ public class CustomerImporterTest {
   public void TestCanNotImportAddressRecordWithMoreThanSixFields() throws IOException {
     shouldFaildImporting(addressRecordWithMoreThanSixFields(),
         e -> {
-          assertEquals(CustomerImporter.INVALID_ADDRESS_RECORD, e.getMessage());
+          assertEquals(Importer.INVALID_ADDRESS_RECORD, e.getMessage());
           CustomerDTO customer = customerIdentifiedAs("D", "22333444");
           assertTrue(customer.addressesIsEmpty());
         });
@@ -100,7 +102,6 @@ public class CustomerImporterTest {
 
   public <T extends Throwable> void shouldFaildImporting(Reader data,
       Consumer<T> assertClosure) throws IOException {
-
     CustomerImporter importer = new CustomerImporter(customerService);
     try {
       importer.process(data);
@@ -118,7 +119,7 @@ public class CustomerImporterTest {
       fail();
     } catch (RuntimeException e) {
       assertEquals(
-          CustomerImporter.INVALID_CUSTOMER_RECORD, e.getMessage());
+          Importer.INVALID_CUSTOMER_RECORD, e.getMessage());
       assertEquals(0, numberOfCustomers());
     }
 
@@ -132,7 +133,7 @@ public class CustomerImporterTest {
       fail();
     } catch (RuntimeException e) {
       assertEquals(
-          CustomerImporter.INVALID_CUSTOMER_RECORD, e.getMessage());
+          Importer.INVALID_CUSTOMER_RECORD, e.getMessage());
       assertEquals(0, numberOfCustomers());
     }
 
@@ -264,7 +265,11 @@ public class CustomerImporterTest {
 
   @Before
   public void openSession() {
-    customerService = new CustomerServiceImpl();
+    if (transientEnviroment) {
+      customerService = new TransientEnviroment();
+    } else {
+      customerService = new DBEnviroment();
+    }
   }
 
 }

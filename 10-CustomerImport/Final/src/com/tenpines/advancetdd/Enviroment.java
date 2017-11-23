@@ -2,9 +2,9 @@ package com.tenpines.advancetdd;
 
 import java.util.List;
 
-public interface CustomerService {
+public interface Enviroment {
 
-  Long persist(CustomerDTO newCustomer);
+  Long persistCustomer(CustomerDTO newCustomer);
 
   List<CustomerDTO> list();
 
@@ -12,4 +12,5 @@ public interface CustomerService {
 
   public void finalize();
 
+  Long persistSupplier(SupplierDTO supplierDTO);
 }

@@ -12,11 +12,11 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
-public class CustomerServiceImpl implements CustomerService {
+public class DBEnviroment implements Enviroment {
 
   private Session session;
 
-  public CustomerServiceImpl() {
+  public DBEnviroment() {
     Configuration configuration = new Configuration();
     configuration.configure();
 
@@ -28,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public Long persist(CustomerDTO newCustomer) {
+  public Long persistCustomer(CustomerDTO newCustomer) {
     Customer customer = null;
     if (newCustomer.getId() != null) {
       customer = (Customer) session.get(Customer.class, newCustomer.getId());
@@ -82,6 +82,11 @@ public class CustomerServiceImpl implements CustomerService {
   public void finalize() {
     session.getTransaction().commit();
     session.close();
+  }
+
+  @Override
+  public Long persistSupplier(SupplierDTO supplierDTO) {
+    return null;
   }
 
   public CustomerDTO assemblyCustomerDTO(Customer customer) {
