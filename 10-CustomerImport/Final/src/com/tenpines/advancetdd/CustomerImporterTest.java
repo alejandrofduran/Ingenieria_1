@@ -16,27 +16,27 @@ import org.junit.Test;
 
 public class CustomerImporterTest {
 
-  private Enviroment customerService;
+  private Enviroment enviroment;
 
   private boolean transientEnviroment = true;
 
   @Test
   public void importsValidDataCorrectly() throws IOException {
-    new CustomerImporter(customerService).process(validDateReader());
+    new CustomerImporter(enviroment).process(validDateReader());
     assertEquals(2, numberOfCustomers());
     assertPepeSanchezWasImportedCorrectly();
     assertJuanPerezWasImportedCorrectly();
   }
 
   public int numberOfCustomers() {
-    List<CustomerDTO> customers = customerService.list();
+    List<CustomerDTO> customers = enviroment.listCustomers();
     int size = customers.size();
     return size;
   }
 
   @Test
   public void canNotImportAddressWithoutCustomer() throws IOException {
-    CustomerImporter importer = new CustomerImporter(customerService);
+    CustomerImporter importer = new CustomerImporter(enviroment);
     try {
       importer.process(addressWithoutCustomerData());
       fail();
@@ -49,7 +49,7 @@ public class CustomerImporterTest {
 
   @Test
   public void TestDoesNotImportRecordsStartingWithCButMoreCharacters() throws IOException {
-    CustomerImporter importer = new CustomerImporter(customerService);
+    CustomerImporter importer = new CustomerImporter(enviroment);
     try {
       importer.process(invalidCustomerRecordStartData());
       fail();
@@ -62,7 +62,7 @@ public class CustomerImporterTest {
 
   @Test
   public void TestDoesNotImportRecordsStartingWithAButMoreCharacters() throws IOException {
-    CustomerImporter importer = new CustomerImporter(customerService);
+    CustomerImporter importer = new CustomerImporter(enviroment);
     try {
       importer.process(invalidAddressRecordStartData());
       fail();
@@ -76,7 +76,7 @@ public class CustomerImporterTest {
 
   @Test
   public void TestCanNotImportAddressRecordWithLessThanSixFields() throws IOException {
-    CustomerImporter importer = new CustomerImporter(customerService);
+    CustomerImporter importer = new CustomerImporter(enviroment);
     try {
       importer.process(addressRecordWithLessThanSixFields());
       fail();
@@ -102,7 +102,7 @@ public class CustomerImporterTest {
 
   public <T extends Throwable> void shouldFaildImporting(Reader data,
       Consumer<T> assertClosure) throws IOException {
-    CustomerImporter importer = new CustomerImporter(customerService);
+    CustomerImporter importer = new CustomerImporter(enviroment);
     try {
       importer.process(data);
       fail();
@@ -113,7 +113,7 @@ public class CustomerImporterTest {
 
   @Test
   public void TestCanNotImportCustomerRecordWithLessThanFiveFields() throws IOException {
-    CustomerImporter importer = new CustomerImporter(customerService);
+    CustomerImporter importer = new CustomerImporter(enviroment);
     try {
       importer.process(customerRecordWithLessThanFiveFields());
       fail();
@@ -127,7 +127,7 @@ public class CustomerImporterTest {
 
   @Test
   public void TestCanNotImportCustomerRecordWithMoreThanFiveFields() throws IOException {
-    CustomerImporter importer = new CustomerImporter(customerService);
+    CustomerImporter importer = new CustomerImporter(enviroment);
     try {
       importer.process(customerRecordWithMoreThanFiveFields());
       fail();
@@ -230,7 +230,7 @@ public class CustomerImporterTest {
   public CustomerDTO customerIdentifiedAs(String idType, String idNumber) {
     List<CustomerDTO> customers;
     CustomerDTO customer;
-    customers = customerService.customerIdentifiedAs(idType, idNumber);
+    customers = enviroment.customerIdentifiedAs(idType, idNumber);
     assertEquals(1, customers.size());
     customer = customers.get(0);
     return customer;
@@ -260,15 +260,15 @@ public class CustomerImporterTest {
 
   @After
   public void closeSession() {
-    customerService.finalize();
+    enviroment.finalize();
   }
 
   @Before
   public void openSession() {
     if (transientEnviroment) {
-      customerService = new TransientEnviroment();
+      enviroment = new TransientEnviroment();
     } else {
-      customerService = new DBEnviroment();
+      enviroment = new DBEnviroment();
     }
   }
 

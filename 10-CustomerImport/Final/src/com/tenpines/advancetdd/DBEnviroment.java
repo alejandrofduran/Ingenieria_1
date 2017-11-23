@@ -67,7 +67,7 @@ public class DBEnviroment implements Enviroment {
   }
 
   @Override
-  public List<CustomerDTO> list() {
+  public List<CustomerDTO> listCustomers() {
     return new ArrayList<>(assemblyCustomerDTO(session.createCriteria(Customer.class).list()));
   }
 
@@ -87,6 +87,36 @@ public class DBEnviroment implements Enviroment {
   @Override
   public Long persistSupplier(SupplierDTO supplierDTO) {
     return null;
+  }
+
+  @Override
+  public List<SupplierDTO> listSuppliers() {
+    return new ArrayList<>(assemblySupplierDTO(session.createCriteria(Supplier.class).list()));
+  }
+
+  @Override
+  public List<SupplierDTO> supplierIdentifiedAs(String idType, String idNumber) {
+    return new ArrayList<>(assemblySupplierDTO(session.createCriteria(Supplier.class).
+        add(Restrictions.eq("identificationType", idType)).
+        add(Restrictions.eq("identificationNumber", idNumber)).list()));
+  }
+
+  private Set<SupplierDTO> assemblySupplierDTO(Collection<Supplier> list) {
+    Set<SupplierDTO> dtos = new HashSet<>();
+    if (list != null) {
+      for (Supplier supplier : list) {
+        dtos.add(assemblySupplierDTO(supplier));
+      }
+    }
+    return dtos;
+  }
+
+  private SupplierDTO assemblySupplierDTO(Supplier supplier) {
+    SupplierDTO supplierDTO = new SupplierDTO()
+        .setIdentificationType(supplier.getIdentificationType()).setId(supplier.getId())
+        .setIdentificationNumber(supplier.getIdentificationNumber()).setName(supplier.getName())
+        .setCustomers(assemblyCustomerDTO(supplier.getCustomers()));
+    return supplierDTO;
   }
 
   public CustomerDTO assemblyCustomerDTO(Customer customer) {

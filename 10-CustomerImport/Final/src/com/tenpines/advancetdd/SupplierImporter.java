@@ -1,9 +1,13 @@
 package com.tenpines.advancetdd;
 
+import java.util.List;
+
 public class SupplierImporter extends Importer {
 
-  public SupplierImporter(Enviroment customerService) {
-    super(customerService);
+  public static final String CUSTOMER_NO_EXISTENTE = "customer no existente";
+
+  public SupplierImporter(Enviroment enviroment) {
+    super(enviroment);
   }
 
   @Override
@@ -18,11 +22,16 @@ public class SupplierImporter extends Importer {
         break;
       case "NC":
         newCustomer = customerParser.parseRecord(record);
+        enviroment.persistCustomer(newCustomer);
         newSupplier.getCustomers().add(newCustomer);
         enviroment.persistSupplier(newSupplier);
         break;
       case "EC":
-        newCustomer = enviroment.customerIdentifiedAs(record[1], record[2]).get(0);
+        List<CustomerDTO> customerDTOS = enviroment.customerIdentifiedAs(record[1], record[2]);
+        if (customerDTOS == null || customerDTOS.isEmpty()) {
+          throw new RuntimeException(CUSTOMER_NO_EXISTENTE);
+        }
+        newCustomer = customerDTOS.get(0);
         newSupplier.getCustomers().add(newCustomer);
         enviroment.persistSupplier(newSupplier);
         break;

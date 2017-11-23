@@ -1,15 +1,16 @@
 package com.tenpines.advancetdd;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class SupplierDTO {
 
   private String name;
-  private Set<CustomerDTO> customers;
+  private Set<CustomerDTO> customers = new HashSet<>();
   private Long id;
   private String identificationType;
   private String identificationNumber;
-  private Set<AddressDTO> addresses;
+  private Set<AddressDTO> addresses = new HashSet<>();
 
 
   public Set<CustomerDTO> getCustomers() {
@@ -88,5 +89,19 @@ public class SupplierDTO {
   @Override
   public int hashCode() {
     return id != null ? id.hashCode() : 0;
+  }
+
+  public int numberOfAddresses() {
+    return addresses.size();
+  }
+
+  public AddressDTO addressAt(String alem) {
+    for (AddressDTO addressDTO : addresses
+        ) {
+      if (addressDTO.isAt(alem)) {
+        return addressDTO;
+      }
+    }
+    return null;
   }
 }

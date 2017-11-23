@@ -22,7 +22,7 @@ public class TransientEnviroment implements Enviroment {
   }
 
   @Override
-  public List<CustomerDTO> list() {
+  public List<CustomerDTO> listCustomers() {
     return new ArrayList<>(dtos);
   }
 
@@ -45,12 +45,29 @@ public class TransientEnviroment implements Enviroment {
 
   @Override
   public Long persistSupplier(SupplierDTO supplierDTO) {
-    if (supplierDTOS.contains(supplierDTO)) {
-      return supplierDTO.getId();
+    if (!supplierDTOS.contains(supplierDTO)) {
+      supplierDTO.setId(first++);
+      supplierDTOS.add(supplierDTO);
     }
-    supplierDTO.setId(first++);
-    supplierDTOS.add(supplierDTO);
+    dtos.addAll(supplierDTO.getCustomers());
     return supplierDTO.getId();
+  }
+
+  @Override
+  public List<SupplierDTO> listSuppliers() {
+    return new ArrayList<>(supplierDTOS);
+  }
+
+  @Override
+  public List<SupplierDTO> supplierIdentifiedAs(String idType, String idNumber) {
+    List<SupplierDTO> list = new ArrayList<>();
+    for (SupplierDTO dto : supplierDTOS) {
+      if (dto.getIdentificationType().equals(idType) && dto.getIdentificationNumber()
+          .equals(idNumber)) {
+        list.add(dto);
+      }
+    }
+    return list;
   }
 
 }

@@ -2,8 +2,8 @@ package com.tenpines.advancetdd;
 
 public class CustomerImporter extends Importer {
 
-  public CustomerImporter(Enviroment customerService) {
-    super(customerService);
+  public CustomerImporter(Enviroment enviroment) {
+    super(enviroment);
   }
 
   protected void processCurrent() {
